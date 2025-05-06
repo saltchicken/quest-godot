@@ -1,10 +1,13 @@
-extends Node
+extends MultiplayerSynchronizer
 class_name FiniteStateMachine
 
 var states : Dictionary = {}
 var state_transitioning : bool = false
+var current_state_name = ""
 
 @onready var current_state = get_children()[0]
+
+
 
 @export var input: InputComponent
 @export var animation: AnimationTree
@@ -14,6 +17,8 @@ func _ready():
 		if child is State:
 			states[child.name.to_lower()] = child
 			child.state_transition.connect(change_state)
+	# TODO: Make this unnecessary
+	current_state_name = current_state.name
 	# await owner.ready
 	# if owner.initial_state:
 	# 	#call_deferred('_init_state')
@@ -51,3 +56,5 @@ func change_state(source_state : State, new_state_name : String, params = null):
 		new_state.Enter()
 	current_state = new_state
 	state_transitioning = false
+
+	current_state_name = current_state.name

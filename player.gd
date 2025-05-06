@@ -46,7 +46,7 @@ func _physics_process_server(delta):
 
 func _physics_process_authority_client(_delta):
 	%AuthorityLookDir.text = "Input: " + str(-global_transform.basis.z)
-	%AuthorityState.text = "State: " + state_machine.current_state.name
+	%AuthorityState.text = "State: " + %StateMachine.current_state_name
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pass
@@ -55,7 +55,8 @@ func _physics_process_authority_client(_delta):
 
 func _physics_process_peer_client(_delta):
 	%PeerLookDir.text = "Input: " + str(-global_transform.basis.z)
-	%PeerState.text = "State: " + state_machine.current_state.name
+	%PeerState.text = "State: " + %StateMachine.current_state_name
+
 
 	var authority_player = _find_authority_player()
 	if authority_player:
