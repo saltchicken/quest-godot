@@ -45,8 +45,8 @@ func _physics_process_server(delta):
 		_apply_movement_from_input(delta)
 
 func _physics_process_authority_client(_delta):
-	%AuthorityLookDir.text = "Input: " + str(-global_transform.basis.z)
-	%AuthorityState.text = "State: " + %StateMachine.current_state_name
+	%AuthorityLookDir.text = "Input: " + str(-global_transform.basis.z.normalized())
+	%AuthorityState.text = "State: " + str(%StateMachine.current_state)
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pass
@@ -54,8 +54,9 @@ func _physics_process_authority_client(_delta):
 	_apply_animation_authority_client()
 
 func _physics_process_peer_client(_delta):
-	%PeerLookDir.text = "Input: " + str(-global_transform.basis.z)
-	%PeerState.text = "State: " + %StateMachine.current_state_name
+	%PeerLookDir.text = "Input: " + str(-global_transform.basis.z.normalized())
+	%PeerState.text = "State: " + str(%StateMachine.current_state)
+	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_left")
 
 
 	var authority_player = _find_authority_player()
@@ -135,6 +136,26 @@ func _find_authority_player():
 			return player
 	return null
 
+func _change_state(new_state_name):
+	if multiplayer.is_server():
+		if state_machine.current_state.name == new_state_name:
+			# print("Already in state: " + new_state_name)
+			return
+		state_machine.current_state.state_transition.emit(state_machine.current_state, new_state_name)
+		broadcast_state_change.rpc(new_state_name)
+	else:
+		print("This is a problem")
+
+@rpc("authority")
+func broadcast_state_change(new_state_name):
+	if not multiplayer.is_server():
+		if state_machine.current_state.name == new_state_name:
+			# print("Already in state: " + new_state_name)
+			return
+		state_machine.current_state.state_transition.emit(state_machine.current_state, new_state_name)
+	else:
+		print("This is also a problem")
+
 
 func _apply_movement_from_input(delta):
 	# Apply gravity
@@ -147,12 +168,10 @@ func _apply_movement_from_input(delta):
 	var input_run = %InputComponent.input_run
 	
 	if input_run:
-		if state_machine.current_state.name != "run":
-			state_machine.current_state.state_transition.emit(state_machine.current_state, 'run')
+		_change_state("run")
 	else:
+		_change_state("idle")
 
-		if state_machine.current_state.name != "idle":
-			state_machine.current_state.state_transition.emit(state_machine.current_state, 'idle')
 	# var input_jump = %InputSynchronizer.input_jump
 	# var input_push = %InputSynchronizer.input_push
 
@@ -349,9 +368,11 @@ func _ready():
 			_ready_peer_clients()
 
 func _physics_process(delta):
+	# print("----------------------------------------")
 	match role:
 		Role.SERVER:
 			_physics_process_server(delta)
+			state_machine._physics_process_state_machine(delta)
 		Role.AUTHORITY_CLIENT:
 			_physics_process_authority_client(delta)
 		Role.PEER_CLIENT:

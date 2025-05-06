@@ -1,4 +1,4 @@
-[gd_scene load_steps=86 format=3 uid="uid://bk6x4rvwunklf"]
+[gd_scene load_steps=85 format=3 uid="uid://bk6x4rvwunklf"]
 
 [ext_resource type="Script" uid="uid://dvav0l8m22oyv" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Texture2D" uid="uid://tunf1xiuva2y" path="res://char_a_p1_0bas_demn_v01.png" id="2_onrkg"]
@@ -641,11 +641,6 @@ properties/0/path = NodePath(".:rotation")
 properties/0/spawn = true
 properties/0/replication_mode = 1
 
-[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_1jxqw"]
-properties/0/path = NodePath(".:current_state_name")
-properties/0/spawn = true
-properties/0/replication_mode = 1
-
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 script = ExtResource("1_4flbx")
@@ -741,11 +736,10 @@ unique_name_in_owner = true
 font_size = 6
 outline_size = 4
 
-[node name="StateMachine" type="MultiplayerSynchronizer" parent="."]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("animation")]
 unique_name_in_owner = true
-root_path = NodePath(".")
-replication_config = SubResource("SceneReplicationConfig_1jxqw")
 script = ExtResource("5_sweqy")
+animation = NodePath("../AnimatedSprite3D")
 
 [node name="idle" type="Node" parent="StateMachine"]
 script = ExtResource("6_1jxqw")

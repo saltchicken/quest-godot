@@ -1,7 +1,6 @@
 extends State
 
 func Enter():
-	# animation.play(self.name)
 	# animation.set_direction(self.name, input.direction)
 	print("Enter Run")
 	
@@ -10,7 +9,8 @@ func Exit():
 	pass
 	
 func Update(_delta:float):
-	print("Update Run")
+	pass
+	# print("Update Run")
 	# input.parse_input_action()
 	# animation.set_direction(self.name, input.direction)
 	#

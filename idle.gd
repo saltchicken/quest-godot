@@ -2,7 +2,7 @@ extends State
 
 func Enter():
 	print("Enter Idle")
-	# animation.play(self.name)
+	animation.play(self.name + "_down")
 	# animation.set_direction(self.name, input.direction)
 	
 func Exit():
@@ -10,7 +10,8 @@ func Exit():
 	pass
 	
 func Update(_delta:float):
-	print("Update Idle")
+	pass
+	# print("Update Idle")
 	# input.parse_input_action()
 	# animation.set_direction(self.name, input.direction)
 	#
