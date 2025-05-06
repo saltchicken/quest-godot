@@ -11,13 +11,18 @@ const MOUSE_SENSITIVITY = 0.002
 const MIN_CAMERA_ROTATION = -0.6  # Looking up limit
 const MAX_CAMERA_ROTATION = 0.9   # Looking down limit
 const DEFAULT_CAMERA_DISTANCE = 0.5  # Default distance from pivot
-const MIN_CAMERA_DISTANCE = 0.2     # Closest distance when looking down
+const MIN_CAMERA_DISTANCE = 0.2		# Closest distance when looking down
 
-var input_direction
-var input_rot
-var input_jump
-var input_push = false
-var input_run = false
+var input_direction := Vector3.ZERO
+var input_jump := false
+var input_push := false
+var input_run := false
+
+const INPUT_ACTIONS = {
+	"run": "input_run",
+	"jump": "input_jump",
+	"push": "input_push",
+}
 
 var is_paused = false
 
@@ -25,20 +30,17 @@ func _ready():
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
 		set_process(false)
 		set_physics_process(false)
-	
-	input_direction = Input.get_vector("left", "right", "up", "down")
-	input_rot = player.global_rotation.y
 
 func _physics_process(_delta):
 	send_input_direction.rpc_id(1, _handle_input_direction())
 
-	input_run = Input.is_action_pressed("run")
-	# input_jump = Input.get_action_strength("jump")
-	if Input.is_action_just_pressed("jump"):
-		jump_pressed.rpc_id(1)
-	elif Input.is_action_just_released("jump"):
-		jump_released.rpc_id(1)
-	input_push = Input.get_action_strength("push")
+	for action_name in INPUT_ACTIONS:
+		if Input.is_action_just_pressed(action_name):
+			send_input_state.rpc_id(1, action_name, true)
+		elif Input.is_action_just_released(action_name):
+			send_input_state.rpc_id(1, action_name, false)
+
+
 	if Input.is_action_just_pressed("pause"):
 		toggle_pause()
 
@@ -48,7 +50,7 @@ func _handle_input_direction():
 	var direction
 	
 	if raw_input_length > 0.1:
-		input_rot = player.global_rotation.y
+		var input_rot = player.global_rotation.y
 		var forward = Vector2(0, 1).rotated(-input_rot)
 		var right = Vector2(1, 0).rotated(-input_rot)
 		
@@ -71,6 +73,7 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		# Rotate player horizontally (around Y axis)
 		player.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
+		# camera_pivot.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		
 		# Rotate camera vertically with proper clamping
 		var current_rotation = camera_pivot.rotation.x
@@ -107,12 +110,13 @@ func send_input_direction(direction):
 	input_direction = direction
 
 @rpc("any_peer")
-func jump_pressed():
-	input_jump = true
-
-@rpc("any_peer")
-func jump_released():
-	input_jump = false
+func send_input_state(action_name, is_pressed):
+	var state_var = INPUT_ACTIONS[action_name]
+	if state_var:
+		set(state_var, is_pressed)
+	else:
+		# TODO: Should be able to remove this check
+		print("Warning: Unknown input action: " + action_name)
 
 func leave_game():
 	multiplayer.multiplayer_peer.close()
