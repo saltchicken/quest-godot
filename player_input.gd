@@ -75,7 +75,7 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		# Rotate player horizontally (around Y axis)
 		player.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		look_direction = -player.global_transform.basis.z.normalized()
+		# look_direction = -player.global_transform.basis.z.normalized()
 		# if look_direction.length() > 0.1:
 		# 	look_direction = -player.global_transform.basis.z
 		# 	look_direction = look_direction.normalized()

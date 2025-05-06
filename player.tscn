@@ -658,6 +658,7 @@ replication_config = SubResource("SceneReplicationConfig_4flbx")
 
 [node name="InputComponent" type="MultiplayerSynchronizer" parent="."]
 unique_name_in_owner = true
+replication_interval = 0.01
 replication_config = SubResource("SceneReplicationConfig_hqtel")
 script = ExtResource("3_i3pqv")
 
@@ -709,7 +710,7 @@ spacing = 0.025
 [node name="AuthorityDebug" type="Node3D" parent="DebugStats"]
 unique_name_in_owner = true
 
-[node name="AuthorityInputDir" type="Label3D" parent="DebugStats/AuthorityDebug"]
+[node name="AuthorityLookDir" type="Label3D" parent="DebugStats/AuthorityDebug"]
 unique_name_in_owner = true
 font_size = 6
 outline_size = 4
@@ -717,7 +718,7 @@ outline_size = 4
 [node name="PeerDebug" type="Node3D" parent="DebugStats"]
 unique_name_in_owner = true
 
-[node name="PeerInputDir" type="Label3D" parent="DebugStats/PeerDebug"]
+[node name="PeerLookDir" type="Label3D" parent="DebugStats/PeerDebug"]
 unique_name_in_owner = true
 font_size = 6
 outline_size = 4
