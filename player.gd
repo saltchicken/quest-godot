@@ -142,15 +142,19 @@ func _apply_movement_from_input(delta):
 	
 	# Get synchronized input from client
 	var input_dir = %InputComponent.input_direction
-	var input_jump = %InputComponent.input_jump
+	# var input_jump = %InputComponent.input_jump
+	var input_run = %InputComponent.input_run
 	
-	# if input_jump:
-	# 	print("Jumping")
-	# else:
-	# 	print("Not jumping")
+	if input_run:
+		if state_machine.current_state.name != "run":
+			state_machine.current_state.state_transition.emit(state_machine.current_state, 'run')
+	else:
+
+		if state_machine.current_state.name != "idle":
+			state_machine.current_state.state_transition.emit(state_machine.current_state, 'idle')
 	# var input_jump = %InputSynchronizer.input_jump
 	# var input_push = %InputSynchronizer.input_push
-	var input_run = %InputComponent.input_run
+
 	
 	# Handle jump
 	# if input_jump and is_on_floor() and jump_cooldown_timer <= 0:
