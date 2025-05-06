@@ -1,9 +1,12 @@
-[gd_scene load_steps=82 format=3 uid="uid://bk6x4rvwunklf"]
+[gd_scene load_steps=85 format=3 uid="uid://bk6x4rvwunklf"]
 
 [ext_resource type="Script" uid="uid://dvav0l8m22oyv" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Texture2D" uid="uid://tunf1xiuva2y" path="res://char_a_p1_0bas_demn_v01.png" id="2_onrkg"]
 [ext_resource type="Script" uid="uid://c3p0vg8fygcok" path="res://player_input.gd" id="3_i3pqv"]
 [ext_resource type="Script" uid="uid://088x8xx047t8" path="res://debug_stats.gd" id="4_hqtel"]
+[ext_resource type="Script" uid="uid://g54h3qgdivex" path="res://state_machine.gd" id="5_sweqy"]
+[ext_resource type="Script" uid="uid://cvviopkgfalex" path="res://idle.gd" id="6_1jxqw"]
+[ext_resource type="Script" uid="uid://dgal0pcamogrt" path="res://run.gd" id="7_dw050"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3pqv"]
 radius = 0.0784727
@@ -715,6 +718,11 @@ unique_name_in_owner = true
 font_size = 6
 outline_size = 4
 
+[node name="AuthorityState" type="Label3D" parent="DebugStats/AuthorityDebug"]
+unique_name_in_owner = true
+font_size = 6
+outline_size = 4
+
 [node name="PeerDebug" type="Node3D" parent="DebugStats"]
 unique_name_in_owner = true
 
@@ -722,5 +730,20 @@ unique_name_in_owner = true
 unique_name_in_owner = true
 font_size = 6
 outline_size = 4
+
+[node name="PeerState" type="Label3D" parent="DebugStats/PeerDebug"]
+unique_name_in_owner = true
+font_size = 6
+outline_size = 4
+
+[node name="StateMachine" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("5_sweqy")
+
+[node name="idle" type="Node" parent="StateMachine"]
+script = ExtResource("6_1jxqw")
+
+[node name="run" type="Node" parent="StateMachine"]
+script = ExtResource("7_dw050")
 
 [connection signal="pressed" from="PauseMenu/HBoxContainer/VBoxContainer/Button" to="InputComponent" method="leave_game"]

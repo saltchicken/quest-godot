@@ -6,6 +6,8 @@ var role = Role.PEER_CLIENT
 @onready var camera = $CameraPivot/Camera3D
 @onready var player_name_label = %PlayerNameLabel
 
+@onready var state_machine = $StateMachine
+
 var _is_on_floor = false
 var _alive = true
 
@@ -44,6 +46,7 @@ func _physics_process_server(delta):
 
 func _physics_process_authority_client(_delta):
 	%AuthorityLookDir.text = "Input: " + str(-global_transform.basis.z)
+	%AuthorityState.text = "State: " + state_machine.current_state.name
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pass
@@ -52,6 +55,7 @@ func _physics_process_authority_client(_delta):
 
 func _physics_process_peer_client(_delta):
 	%PeerLookDir.text = "Input: " + str(-global_transform.basis.z)
+	%PeerState.text = "State: " + state_machine.current_state.name
 
 	var authority_player = _find_authority_player()
 	if authority_player:
@@ -140,10 +144,10 @@ func _apply_movement_from_input(delta):
 	var input_dir = %InputComponent.input_direction
 	var input_jump = %InputComponent.input_jump
 	
-	if input_jump:
-		print("Jumping")
-	else:
-		print("Not jumping")
+	# if input_jump:
+	# 	print("Jumping")
+	# else:
+	# 	print("Not jumping")
 	# var input_jump = %InputSynchronizer.input_jump
 	# var input_push = %InputSynchronizer.input_push
 	var input_run = %InputComponent.input_run
