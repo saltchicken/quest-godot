@@ -43,8 +43,7 @@ func _physics_process_server(delta):
 		_apply_movement_from_input(delta)
 
 func _physics_process_authority_client(_delta):
-	var input_dir = %InputComponent.input_direction
-	%AuthorityInputDir.text = "Input: " + str(input_dir)
+	%AuthorityInputDir.text = "Input: " + str(-global_transform.basis.z)
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pass
@@ -52,8 +51,7 @@ func _physics_process_authority_client(_delta):
 	_apply_animation_authority_client()
 
 func _physics_process_peer_client(_delta):
-	var input_dir = %InputComponent.input_direction
-	%PeerInputDir.text = "Input: " + str(input_dir)
+	%PeerInputDir.text = "Input: " + str(-global_transform.basis.z)
 
 	var authority_player = _find_authority_player()
 	if authority_player:

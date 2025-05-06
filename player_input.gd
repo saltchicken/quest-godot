@@ -1,4 +1,4 @@
-extends Node
+extends MultiplayerSynchronizer
 class_name InputComponent
 
 @onready var player = $".."
@@ -12,6 +12,8 @@ const MIN_CAMERA_ROTATION = -0.6  # Looking up limit
 const MAX_CAMERA_ROTATION = 0.9   # Looking down limit
 const DEFAULT_CAMERA_DISTANCE = 0.5  # Default distance from pivot
 const MIN_CAMERA_DISTANCE = 0.2		# Closest distance when looking down
+
+var look_direction
 
 var input_direction := Vector3.ZERO
 var input_jump := false
@@ -73,6 +75,11 @@ func _unhandled_input(event):
 	if event is InputEventMouseMotion and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		# Rotate player horizontally (around Y axis)
 		player.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
+		look_direction = -player.global_transform.basis.z.normalized()
+		# if look_direction.length() > 0.1:
+		# 	look_direction = -player.global_transform.basis.z
+		# 	look_direction = look_direction.normalized()
+			
 		# camera_pivot.rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		
 		# Rotate camera vertically with proper clamping
