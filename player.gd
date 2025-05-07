@@ -76,16 +76,6 @@ func facing_direction_vector_to_ordinal2(direction_vector, player_forward=Vector
 	else:
 		return "right"
 
-	
-	# if angle_deg >= -45 and angle_deg <= 45:
-	# 	return "up"
-	# elif angle_deg > 45 and angle_deg <= 135:
-	# 	return "left"
-	# elif angle_deg > 135 and angle_deg <= 180 or angle_deg >= -180 and angle_deg < -135:
-	# 	return "down"
-	# else:
-	# 	return "right"
-
 func _physics_process_authority_client(_delta):
 	# var player_forward = -global_transform.basis.z.normalized()
 	%AuthorityLookDir.text = "Input: " + str(%InputComponent.look_direction)
@@ -102,7 +92,6 @@ func _physics_process_authority_client(_delta):
 
 func _physics_process_peer_client(_delta):
 	var player_forward = -global_transform.basis.z.normalized()
-	# %PeerLookDir.text = "Input: " + str(%InputComponent.look_direction)
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
 
 
@@ -119,25 +108,9 @@ func _physics_process_peer_client(_delta):
 
 			var to_auth_camera_global = auth_camera.global_transform.origin - global_transform.origin
 			var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
-			print(to_pov_local_to_target)
-			%PeerLookDir.text = "Input: " + str(to_pov_local_to_target)
 			
 			var animation_direction = facing_direction_vector_to_ordinal2(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
 			%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
-
-
-
-			
-			
-		
-		# # Calculate angle in radians
-		# var forward = -global_transform.basis.z
-		# forward.y = 0
-		# forward = forward.normalized()
-		#
-		# var angle_rad = forward.signed_angle_to(to_authority.normalized(), Vector3.UP)
-		# var angle_deg = rad_to_deg(angle_rad)
-
 
 
 	_apply_animation_peer_client()
@@ -145,46 +118,8 @@ func _physics_process_peer_client(_delta):
 func _apply_animation_authority_client():
 	pass
 
-	# var adjusted_direction = last_direction
-	#
-	# # if role == Role.PEER_CLIENT and camera_angle_rad != null:
-	# # 	# Rotate the direction vector by the camera angle
-	# # 	adjusted_direction = last_direction.rotated(auth_camera_angle_rad)
-	#
-	# # Determine animation direction based on the adjusted vector
-	# if abs(adjusted_direction.x) > abs(adjusted_direction.y):
-	# 	animation_direction = "right" if adjusted_direction.x > 0 else "left"
-	# else:
-	# 	animation_direction = "up" if adjusted_direction.y > 0 else "down"
-	#
-	# var full_animation = current_animation_base
-	# if current_animation_base != "death":
-	# 	full_animation += "_" + animation_direction
-	#
-	# animated_sprite.play(full_animation)
-	# animated_sprite.speed_scale = animation_speed
-
 func _apply_animation_peer_client():
-
 	pass
-	# var adjusted_direction = last_direction
-	#
-	# # if role == Role.PEER_CLIENT and camera_angle_rad != null:
-	# # 	# Rotate the direction vector by the camera angle
-	# # 	adjusted_direction = last_direction.rotated(auth_camera_angle_rad)
-	#
-	# # Determine animation direction based on the adjusted vector
-	# if abs(adjusted_direction.x) > abs(adjusted_direction.y):
-	# 	animation_direction = "right" if adjusted_direction.x > 0 else "left"
-	# else:
-	# 	animation_direction = "up" if adjusted_direction.y > 0 else "down"
-	#
-	# var full_animation = current_animation_base
-	# if current_animation_base != "death":
-	# 	full_animation += "_" + animation_direction
-	#
-	# animated_sprite.play(full_animation)
-	# animated_sprite.speed_scale = animation_speed
 
 func _find_authority_player():
 	var players = get_tree().get_nodes_in_group("players")
