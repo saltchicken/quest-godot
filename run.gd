@@ -8,17 +8,38 @@ func Exit():
 	print("Exit Run")
 	pass
 	
-func Update(_delta:float):
-	pass
-	# print("Update Run")
-	# input.parse_input_action()
-	# animation.set_direction(self.name, input.direction)
-	#
-	# if !input.direction:
-	# 	owner.idle.emit()
-	#
-	# state_movement()
-		
+func Update(delta:float):
+	var input_dir = %InputComponent.input_direction
+	var input_run = %InputComponent.input_run
+	
+	if !input_dir:
+		if input_run:
+			owner.run.emit()
+		else:
+			owner.walk.emit()
+	else:
+		if !input_run:
+			owner.walk.emit()
+
+	owner.velocity.x *= (1.0 - owner.FRICTION)
+	owner.velocity.z *= (1.0 - owner.FRICTION)
+
+	var current_speed = owner.SPEED
+	if input_run:
+		current_speed = owner.RUN_SPEED
+	
+	if input_dir:
+		owner.velocity.x += input_dir.x * current_speed * delta * 10.0
+		owner.velocity.z += input_dir.z * current_speed * delta * 10.0
+	
+	# Cap horizontal speed
+	var max_speed = current_speed * 1.2
+	var horizontal_velocity = Vector2(owner.velocity.x, owner.velocity.z)
+	if horizontal_velocity.length() > max_speed:
+		horizontal_velocity = horizontal_velocity.normalized() * max_speed
+		owner.velocity.x = horizontal_velocity.x
+		owner.velocity.z = horizontal_velocity.y
+
 func state_movement():
 	print("Run: State Movement")
 	# owner.velocity.x = input.direction.x * owner.run_speed

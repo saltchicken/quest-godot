@@ -3,6 +3,10 @@ extends CharacterBody3D
 enum Role {SERVER, AUTHORITY_CLIENT, PEER_CLIENT}
 var role = Role.PEER_CLIENT
 
+signal idle
+signal walk
+signal run
+
 @onready var camera = $CameraPivot/Camera3D
 @onready var player_name_label = %PlayerNameLabel
 
@@ -25,10 +29,22 @@ func _enter_tree():
 	%InputComponent.set_multiplayer_authority(name.to_int())
 
 func _ready_server():
+	idle.connect(_on_idle)
+	walk.connect(_on_walk)
+	run.connect(_on_run)
 	add_to_group("players")
 	var lava_areas = get_tree().get_nodes_in_group("lava")
 	for lava in lava_areas:
 		lava.body_entered.connect(_on_lava_entered)
+
+func _on_idle():
+	_change_state("idle")
+
+func _on_walk():
+	_change_state("walk")
+
+func _on_run():
+	_change_state("run")
 
 func _ready_authority_client():
 	add_to_group("players")
@@ -148,73 +164,11 @@ func broadcast_state_change(new_state_name):
 
 
 func _apply_movement_from_input(delta):
+	state_machine._physics_process_state_machine(delta)
 	# Apply gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
 	
-	# Get synchronized input from client
-	var input_dir = %InputComponent.input_direction
-	# var input_jump = %InputComponent.input_jump
-	var input_run = %InputComponent.input_run
-	
-
-	# var input_jump = %InputSynchronizer.input_jump
-	# var input_push = %InputSynchronizer.input_push
-
-	
-	# Handle jump
-	# if input_jump and is_on_floor() and jump_cooldown_timer <= 0:
-	# 	velocity.y = JUMP_VELOCITY
-	# 	jump_cooldown_timer = JUMP_COOLDOWN
-	# 	jump_animation_timer = JUMP_ANIMATION_DURATION
-	#
-	# # Update cooldown timers
-	# if jump_cooldown_timer > 0:
-	# 	jump_cooldown_timer -= delta
-	# if push_cooldown > 0:
-	# 	push_cooldown -= delta
-	# if jump_animation_timer > 0:
-	# 	jump_animation_timer -= delta
-	# if push_animation_timer > 0:
-	# 	push_animation_timer -= delta
-	
-	# Handle push attack
-	# if input_push and push_cooldown <= 0:
-	# 	perform_push_attack()
-	# 	push_cooldown = PUSH_COOLDOWN_DURATION
-	# 	push_animation_timer = PUSH_COOLDOWN_DURATION
-	
-	# if input_dir.length() > 0.1:
-	# 	print("Movement detected")
-	
-	# Apply friction
-	velocity.x *= (1.0 - FRICTION)
-	velocity.z *= (1.0 - FRICTION)
-	
-	# Apply movement force
-	var current_speed = SPEED
-	if input_run:
-		current_speed = RUN_SPEED
-	
-	if input_dir:
-		velocity.x += input_dir.x * current_speed * delta * 10.0
-		velocity.z += input_dir.z * current_speed * delta * 10.0
-	
-	# Cap horizontal speed
-	var max_speed = current_speed * 1.2
-	var horizontal_velocity = Vector2(velocity.x, velocity.z)
-	if horizontal_velocity.length() > max_speed:
-		horizontal_velocity = horizontal_velocity.normalized() * max_speed
-		velocity.x = horizontal_velocity.x
-		velocity.z = horizontal_velocity.y
-
-	if velocity.length() > 0.1:
-		if input_run:
-			_change_state("run")
-		else:
-			_change_state("walk")
-	else:
-		_change_state("idle")
 	
 	# Apply movement
 	move_and_slide()
@@ -366,7 +320,6 @@ func _physics_process(delta):
 	match role:
 		Role.SERVER:
 			_physics_process_server(delta)
-			state_machine._physics_process_state_machine(delta)
 		Role.AUTHORITY_CLIENT:
 			_physics_process_authority_client(delta)
 		Role.PEER_CLIENT:
