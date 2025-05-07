@@ -2,7 +2,7 @@ extends State
 
 func Enter():
 	print("Enter Idle")
-	animation.play(self.name + "_down")
+	animation.play(self.name + "_backward")
 	# animation.set_direction(self.name, input.direction)
 	
 func Exit():

@@ -52,11 +52,11 @@ func facing_direction_vector_to_ordinal(direction_vector, player_forward=Vector3
 	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
 
 	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-		return "up"
+		return "forward"
 	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
 		return "left"
 	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-		return "down"
+		return "backward"
 	else:
 		return "right"
 
@@ -68,11 +68,11 @@ func facing_direction_vector_to_ordinal2(direction_vector, player_forward=Vector
 	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
 
 	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-		return "down"
+		return "backward"
 	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
 		return "left"
 	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-		return "up"
+		return "forward"
 	else:
 		return "right"
 
