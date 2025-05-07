@@ -1,16 +1,16 @@
 extends State
 
 func Enter():
-	print("Enter Idle")
 	# animation.set_direction(self.name, input.direction)
+	print("Enter Walk")
 	
 func Exit():
-	print("Exit Idle")
+	print("Exit Walk")
 	pass
 	
 func Update(_delta:float):
 	pass
-	# print("Update Idle")
+	# print("Update Run")
 	# input.parse_input_action()
 	# animation.set_direction(self.name, input.direction)
 	#
@@ -18,8 +18,8 @@ func Update(_delta:float):
 	# 	owner.idle.emit()
 	#
 	# state_movement()
-	#
+		
 func state_movement():
-	print("Idle: State Movement")
+	print("Run: State Movement")
 	# owner.velocity.x = input.direction.x * owner.run_speed
 	# owner.velocity.y = input.direction.y * owner.run_speed

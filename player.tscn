@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://bk6x4rvwunklf"]
+[gd_scene load_steps=89 format=3 uid="uid://bk6x4rvwunklf"]
 
 [ext_resource type="Script" uid="uid://dvav0l8m22oyv" path="res://player.gd" id="1_4flbx"]
 [ext_resource type="Texture2D" uid="uid://tunf1xiuva2y" path="res://char_a_p1_0bas_demn_v01.png" id="2_onrkg"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://g54h3qgdivex" path="res://state_machine.gd" id="5_sweqy"]
 [ext_resource type="Script" uid="uid://cvviopkgfalex" path="res://idle.gd" id="6_1jxqw"]
 [ext_resource type="Script" uid="uid://dgal0pcamogrt" path="res://run.gd" id="7_dw050"]
+[ext_resource type="Script" uid="uid://e4ab8h0jrls1" path="res://walk.gd" id="8_dw050"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3pqv"]
 radius = 0.0784727
@@ -785,5 +786,8 @@ script = ExtResource("6_1jxqw")
 
 [node name="run" type="Node" parent="StateMachine"]
 script = ExtResource("7_dw050")
+
+[node name="walk" type="Node" parent="StateMachine"]
+script = ExtResource("8_dw050")
 
 [connection signal="pressed" from="PauseMenu/HBoxContainer/VBoxContainer/Button" to="InputComponent" method="leave_game"]

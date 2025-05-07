@@ -161,10 +161,6 @@ func _apply_movement_from_input(delta):
 	# var input_jump = %InputComponent.input_jump
 	var input_run = %InputComponent.input_run
 	
-	if input_run:
-		_change_state("run")
-	else:
-		_change_state("idle")
 
 	# var input_jump = %InputSynchronizer.input_jump
 	# var input_push = %InputSynchronizer.input_push
@@ -215,6 +211,14 @@ func _apply_movement_from_input(delta):
 		horizontal_velocity = horizontal_velocity.normalized() * max_speed
 		velocity.x = horizontal_velocity.x
 		velocity.z = horizontal_velocity.y
+
+	if velocity.length() > 0.1:
+		if input_run:
+			_change_state("run")
+		else:
+			_change_state("walk")
+	else:
+		_change_state("idle")
 	
 	# Apply movement
 	move_and_slide()
