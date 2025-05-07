@@ -44,9 +44,39 @@ func _physics_process_server(delta):
 	if _alive:
 		_apply_movement_from_input(delta)
 
+func facing_direction_vector_to_ordinal(direction_vector):
+	var forward = Vector3(0, 0, -1)
+	# var player_forward = -global_transform.basis.z.normalized()
+	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
+
+	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
+		return "up"
+	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
+		return "left"
+	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
+		return "down"
+	else:
+		return "right"
+
+
+	
+	# if angle_deg >= -45 and angle_deg <= 45:
+	# 	return "up"
+	# elif angle_deg > 45 and angle_deg <= 135:
+	# 	return "left"
+	# elif angle_deg > 135 and angle_deg <= 180 or angle_deg >= -180 and angle_deg < -135:
+	# 	return "down"
+	# else:
+	# 	return "right"
+
 func _physics_process_authority_client(_delta):
-	%AuthorityLookDir.text = "Input: " + str(-global_transform.basis.z.normalized())
+	var facing_direction_vector = -global_transform.basis.z.normalized()
+	%AuthorityLookDir.text = "Input: " + str(%InputComponent.input_direction)
 	%AuthorityState.text = "State: " + str(%StateMachine.current_state)
+	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction)
+	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
+	# print(%InputComponent.look_direction)
+	
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		pass
@@ -54,9 +84,11 @@ func _physics_process_authority_client(_delta):
 	_apply_animation_authority_client()
 
 func _physics_process_peer_client(_delta):
-	%PeerLookDir.text = "Input: " + str(-global_transform.basis.z.normalized())
+	var facing_direction = -global_transform.basis.z.normalized()
+	%PeerLookDir.text = "Input: " + str(facing_direction)
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
-	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_left")
+	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.input_direction)
+	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
 
 
 	var authority_player = _find_authority_player()

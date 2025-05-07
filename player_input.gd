@@ -13,7 +13,7 @@ const MAX_CAMERA_ROTATION = 0.9   # Looking down limit
 const DEFAULT_CAMERA_DISTANCE = 0.5  # Default distance from pivot
 const MIN_CAMERA_DISTANCE = 0.2		# Closest distance when looking down
 
-var look_direction
+var look_direction := Vector3.FORWARD
 
 var input_direction := Vector3.ZERO
 var input_jump := false
@@ -34,7 +34,8 @@ func _ready():
 		set_physics_process(false)
 
 func _physics_process(_delta):
-	send_input_direction.rpc_id(1, _handle_input_direction())
+	input_direction = _handle_input_direction() # This makes input_direction accessible by authority client
+	send_input_direction.rpc_id(1, input_direction)
 
 	for action_name in INPUT_ACTIONS:
 		if Input.is_action_just_pressed(action_name):
@@ -52,6 +53,8 @@ func _handle_input_direction():
 	var direction
 	
 	if raw_input_length > 0.1:
+		look_direction = Vector3(raw_input.x, 0, raw_input.y)
+
 		var input_rot = player.global_rotation.y
 		var forward = Vector2(0, 1).rotated(-input_rot)
 		var right = Vector2(1, 0).rotated(-input_rot)
