@@ -11,6 +11,9 @@ var role = Role.PEER_CLIENT
 var _is_on_floor = false
 var _alive = true
 
+var _authority_player = null
+var _auth_camera = null
+
 const SPEED = 2.5
 const RUN_SPEED = 4.2
 const FRICTION = 0.2
@@ -89,23 +92,21 @@ func _physics_process_peer_client(_delta):
 	# var player_forward = -global_transform.basis.z.normalized()
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
 
-
-	var authority_player = _find_authority_player()
-	if authority_player:
+	if _authority_player == null:
+		_authority_player = _find_authority_player()
+		_auth_camera = _authority_player.get_node_or_null("CameraPivot/Camera3D")
 		# var to_authority = authority_player.global_position - global_position
 		# to_authority.y = 0	# Project onto horizontal plane
 		# to_authority = to_authority.normalized()
 
-		var auth_camera = authority_player.get_node_or_null("CameraPivot/Camera3D")
-		if auth_camera:
-			# var to_target_global = global_transform.origin - auth_camera.global_transform.origin
-			# var to_target_local_to_pov = auth_camera.global_transform.basis.inverse() * to_target_global
+		# var to_target_global = global_transform.origin - auth_camera.global_transform.origin
+		# var to_target_local_to_pov = auth_camera.global_transform.basis.inverse() * to_target_global
 
-			var to_auth_camera_global = auth_camera.global_transform.origin - global_transform.origin
-			var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
-			
-			var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
-			%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
+	var to_auth_camera_global = _auth_camera.global_transform.origin - global_transform.origin
+	var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
+	
+	var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
+	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
 
 
 	_apply_animation_peer_client()
