@@ -13,13 +13,10 @@ func Update(delta:float):
 	var input_run = %InputComponent.input_run
 	
 	if !input_dir:
-		if input_run:
-			owner.run.emit()
-		else:
-			owner.walk.emit()
+			owner.change_state.emit("idle")
 	else:
 		if !input_run:
-			owner.walk.emit()
+			owner.change_state.emit("walk")
 
 	owner.velocity.x *= (1.0 - owner.FRICTION)
 	owner.velocity.z *= (1.0 - owner.FRICTION)

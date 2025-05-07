@@ -19,9 +19,9 @@ func Update(_delta:float):
 
 	if input_dir.length() > 0.1:
 		if input_run:
-			owner.run.emit()
+			owner.change_state.emit("run")
 		else:
-			owner.walk.emit()
+			owner.change_state.emit("walk")
 	
 
 

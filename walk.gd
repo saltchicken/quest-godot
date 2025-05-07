@@ -16,10 +16,10 @@ func Update(delta:float):
 	owner.velocity.z *= (1.0 - owner.FRICTION)
 
 	if !input_dir:
-		owner.idle.emit()
+		owner.change_state.emit("idle")
 	else:
 		if input_run:
-			owner.run.emit()
+			owner.change_state.emit("run")
 
 	var current_speed = owner.SPEED
 	if input_run:

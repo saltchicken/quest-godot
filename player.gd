@@ -3,9 +3,7 @@ extends CharacterBody3D
 enum Role {SERVER, AUTHORITY_CLIENT, PEER_CLIENT}
 var role = Role.PEER_CLIENT
 
-signal idle
-signal walk
-signal run
+signal change_state(new_state_name)
 
 @onready var camera = $CameraPivot/Camera3D
 @onready var player_name_label = %PlayerNameLabel
@@ -29,22 +27,11 @@ func _enter_tree():
 	%InputComponent.set_multiplayer_authority(name.to_int())
 
 func _ready_server():
-	idle.connect(_on_idle)
-	walk.connect(_on_walk)
-	run.connect(_on_run)
+	change_state.connect(_on_change_state)
 	add_to_group("players")
 	var lava_areas = get_tree().get_nodes_in_group("lava")
 	for lava in lava_areas:
 		lava.body_entered.connect(_on_lava_entered)
-
-func _on_idle():
-	_change_state("idle")
-
-func _on_walk():
-	_change_state("walk")
-
-func _on_run():
-	_change_state("run")
 
 func _ready_authority_client():
 	add_to_group("players")
@@ -142,7 +129,7 @@ func _find_authority_player():
 			return player
 	return null
 
-func _change_state(new_state_name):
+func _on_change_state(new_state_name):
 	if multiplayer.is_server():
 		if state_machine.current_state.name == new_state_name:
 			# print("Already in state: " + new_state_name)
