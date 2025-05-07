@@ -60,6 +60,21 @@ func facing_direction_vector_to_ordinal(direction_vector, player_forward=Vector3
 	else:
 		return "right"
 
+func facing_direction_vector_to_ordinal2(direction_vector, player_forward=Vector3.ZERO):
+	var forward = Vector3(0, 0, -1)
+	if player_forward.length() > 0.1:
+		forward = player_forward
+	# var player_forward = -global_transform.basis.z.normalized()
+	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
+
+	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
+		return "down"
+	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
+		return "left"
+	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
+		return "up"
+	else:
+		return "right"
 
 	
 	# if angle_deg >= -45 and angle_deg <= 45:
@@ -87,10 +102,8 @@ func _physics_process_authority_client(_delta):
 
 func _physics_process_peer_client(_delta):
 	var player_forward = -global_transform.basis.z.normalized()
-	%PeerLookDir.text = "Input: " + str(%InputComponent.look_direction)
+	# %PeerLookDir.text = "Input: " + str(%InputComponent.look_direction)
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
-	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction, player_forward)
-	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
 
 
 	var authority_player = _find_authority_player()
@@ -101,17 +114,29 @@ func _physics_process_peer_client(_delta):
 
 		var auth_camera = authority_player.get_node_or_null("CameraPivot/Camera3D")
 		if auth_camera:
-			pass
+			# var to_target_global = global_transform.origin - auth_camera.global_transform.origin
+			# var to_target_local_to_pov = auth_camera.global_transform.basis.inverse() * to_target_global
+
+			var to_auth_camera_global = auth_camera.global_transform.origin - global_transform.origin
+			var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
+			print(to_pov_local_to_target)
+			%PeerLookDir.text = "Input: " + str(to_pov_local_to_target)
+			
+			var animation_direction = facing_direction_vector_to_ordinal2(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
+			%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
+
+
+
 			
 			
 		
-		# Calculate angle in radians
-		var forward = -global_transform.basis.z
-		forward.y = 0
-		forward = forward.normalized()
-		
-		var angle_rad = forward.signed_angle_to(to_authority.normalized(), Vector3.UP)
-		var angle_deg = rad_to_deg(angle_rad)
+		# # Calculate angle in radians
+		# var forward = -global_transform.basis.z
+		# forward.y = 0
+		# forward = forward.normalized()
+		#
+		# var angle_rad = forward.signed_angle_to(to_authority.normalized(), Vector3.UP)
+		# var angle_deg = rad_to_deg(angle_rad)
 
 
 
