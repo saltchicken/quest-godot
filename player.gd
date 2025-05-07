@@ -44,8 +44,10 @@ func _physics_process_server(delta):
 	if _alive:
 		_apply_movement_from_input(delta)
 
-func facing_direction_vector_to_ordinal(direction_vector):
+func facing_direction_vector_to_ordinal(direction_vector, player_forward=Vector3.ZERO):
 	var forward = Vector3(0, 0, -1)
+	if player_forward.length() > 0.1:
+		forward = player_forward
 	# var player_forward = -global_transform.basis.z.normalized()
 	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
 
@@ -70,8 +72,8 @@ func facing_direction_vector_to_ordinal(direction_vector):
 	# 	return "right"
 
 func _physics_process_authority_client(_delta):
-	var facing_direction_vector = -global_transform.basis.z.normalized()
-	%AuthorityLookDir.text = "Input: " + str(%InputComponent.input_direction)
+	# var player_forward = -global_transform.basis.z.normalized()
+	%AuthorityLookDir.text = "Input: " + str(%InputComponent.look_direction)
 	%AuthorityState.text = "State: " + str(%StateMachine.current_state)
 	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction)
 	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
@@ -84,10 +86,10 @@ func _physics_process_authority_client(_delta):
 	_apply_animation_authority_client()
 
 func _physics_process_peer_client(_delta):
-	var facing_direction = -global_transform.basis.z.normalized()
-	%PeerLookDir.text = "Input: " + str(facing_direction)
+	var player_forward = -global_transform.basis.z.normalized()
+	%PeerLookDir.text = "Input: " + str(%InputComponent.look_direction)
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
-	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.input_direction)
+	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction, player_forward)
 	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
 
 
