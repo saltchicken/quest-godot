@@ -45,36 +45,31 @@ func _physics_process_server(delta):
 		_apply_movement_from_input(delta)
 
 func facing_direction_vector_to_ordinal(direction_vector, player_forward=Vector3.ZERO):
-	var forward = Vector3(0, 0, -1)
 	if player_forward.length() > 0.1:
-		forward = player_forward
-	# var player_forward = -global_transform.basis.z.normalized()
-	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
+		var forward = player_forward
+		var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
 
-	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-		return "forward"
-	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
-		return "left"
-	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-		return "backward"
+		if angle_rad >= -PI / 4 and angle_rad < PI / 4:
+			return "backward"
+		elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
+			return "left"
+		elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
+			return "forward"
+		else:
+			return "right"
+	
 	else:
-		return "right"
+		var forward = Vector3(0, 0, -1)
+		var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
 
-func facing_direction_vector_to_ordinal2(direction_vector, player_forward=Vector3.ZERO):
-	var forward = Vector3(0, 0, -1)
-	if player_forward.length() > 0.1:
-		forward = player_forward
-	# var player_forward = -global_transform.basis.z.normalized()
-	var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
-
-	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-		return "backward"
-	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
-		return "left"
-	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-		return "forward"
-	else:
-		return "right"
+		if angle_rad >= -PI / 4 and angle_rad < PI / 4:
+			return "forward"
+		elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
+			return "left"
+		elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
+			return "backward"
+		else:
+			return "right"
 
 func _physics_process_authority_client(_delta):
 	# var player_forward = -global_transform.basis.z.normalized()
@@ -91,15 +86,15 @@ func _physics_process_authority_client(_delta):
 	_apply_animation_authority_client()
 
 func _physics_process_peer_client(_delta):
-	var player_forward = -global_transform.basis.z.normalized()
+	# var player_forward = -global_transform.basis.z.normalized()
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
 
 
 	var authority_player = _find_authority_player()
 	if authority_player:
-		var to_authority = authority_player.global_position - global_position
-		to_authority.y = 0	# Project onto horizontal plane
-		to_authority = to_authority.normalized()
+		# var to_authority = authority_player.global_position - global_position
+		# to_authority.y = 0	# Project onto horizontal plane
+		# to_authority = to_authority.normalized()
 
 		var auth_camera = authority_player.get_node_or_null("CameraPivot/Camera3D")
 		if auth_camera:
@@ -109,7 +104,7 @@ func _physics_process_peer_client(_delta):
 			var to_auth_camera_global = auth_camera.global_transform.origin - global_transform.origin
 			var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
 			
-			var animation_direction = facing_direction_vector_to_ordinal2(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
+			var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
 			%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
 
 
