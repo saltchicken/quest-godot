@@ -15,10 +15,12 @@ func enter_server(_state_packet):
 	pass
 
 func enter_authority_client(_state_packet):
-	pass
+	animation.play(name)
+	animation.set_direction(name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
 
 func enter_peer_client(_state_packet):
-	pass
+	animation.play(name)
+	animation.set_direction(name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
 	
 func exit_server():
 	return state_packet

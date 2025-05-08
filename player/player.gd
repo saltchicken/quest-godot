@@ -54,7 +54,7 @@ func _physics_process_authority_client(_delta):
 	%AuthorityLookDir.text = "Input: " + str(%InputComponent.look_direction)
 	%AuthorityState.text = "State: " + str(%StateMachine.current_state)
 	# var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction)
-	%StateMachine.current_state.animation.play(%StateMachine.current_state.name)
+	# %StateMachine.current_state.animation.play(%StateMachine.current_state.name)
 	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
 	# print(%InputComponent.look_direction)
 	
@@ -83,7 +83,7 @@ func _physics_process_peer_client(_delta):
 	var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
 	
 	# var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
-	%StateMachine.current_state.animation.play(%StateMachine.current_state.name)
+	# %StateMachine.current_state.animation.play(%StateMachine.current_state.name)
 	# %StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
 	#
 	var angle_rad = %InputComponent.look_direction.signed_angle_to(to_pov_local_to_target, Vector3.UP)

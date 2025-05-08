@@ -20,6 +20,8 @@ func Update(_delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
 	var input_jump = %InputComponent.input_jump
+
+
 	# if jumping_timer > 0:
 	# 	jumping_timer -= _delta
 	# 	if jumping_timer <= 0:
