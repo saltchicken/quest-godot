@@ -9,7 +9,13 @@ class_name State
 @warning_ignore("unused_signal")
 signal state_transition
 
-func Enter(params):
+func enter_server(params):
+	pass
+
+func enter_process_authority_client(params):
+	pass
+
+func enter_process_peer_client(params):
 	pass
 	
 func Exit():

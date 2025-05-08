@@ -1,8 +1,13 @@
 extends State
 
-func Enter(params):
-	# animation.set_direction(self.name, input.direction)
-	print("Enter Walk")
+func enter_server(_params):
+	print("Enter Server Walk")
+
+func enter_process_authority_client(_params):
+	print("Enter Auth Client Walk")
+
+func enter_process_peer_client(_params):
+	print("Enter Peer client Walk")
 	
 func Exit():
 	print("Exit Walk")

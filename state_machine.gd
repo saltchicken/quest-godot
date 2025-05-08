@@ -44,7 +44,13 @@ func change_state(source_state : State, new_state_name : String, params = null):
 	if current_state:
 		current_state.Exit()
 		
-	new_state.Enter(params)
+	match owner.role:
+		owner.Role.SERVER:
+			new_state.enter_server(params)
+		owner.Role.AUTHORITY_CLIENT:
+			new_state.enter_process_authority_client(params)
+		owner.Role.PEER_CLIENT:
+			new_state.enter_process_peer_client(params)
 
 	current_state = new_state
 	state_transitioning = false
