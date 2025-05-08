@@ -44,45 +44,18 @@ func _ready_peer_clients():
 	add_to_group("players")
 	GameManager.game_state_changed.connect(_on_game_state_changed)
 
-
 func _physics_process_server(delta):
 	_is_on_floor = is_on_floor()
 	if _alive:
 		_apply_movement_from_input(delta)
 
-func facing_direction_vector_to_ordinal(direction_vector, player_forward=Vector3.ZERO):
-	if player_forward.length() > 0.1:
-		var forward = player_forward
-		var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
-
-		if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-			return "backward"
-		elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
-			return "left"
-		elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-			return "forward"
-		else:
-			return "right"
-	
-	else:
-		var forward = Vector3(0, 0, -1)
-		var angle_rad = forward.signed_angle_to(direction_vector, Vector3.UP)
-
-		if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-			return "forward"
-		elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
-			return "left"
-		elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-			return "backward"
-		else:
-			return "right"
-
 func _physics_process_authority_client(_delta):
 	# var player_forward = -global_transform.basis.z.normalized()
 	%AuthorityLookDir.text = "Input: " + str(%InputComponent.look_direction)
 	%AuthorityState.text = "State: " + str(%StateMachine.current_state)
-	var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction)
-	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
+	# var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction)
+	%StateMachine.current_state.animation.play(%StateMachine.current_state.name)
+	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
 	# print(%InputComponent.look_direction)
 	
 	
@@ -105,11 +78,29 @@ func _physics_process_peer_client(_delta):
 		# var to_target_global = global_transform.origin - auth_camera.global_transform.origin
 		# var to_target_local_to_pov = auth_camera.global_transform.basis.inverse() * to_target_global
 
+	# TODO: Should not need the if statements. Need to calculate the rotated vector properly for the direction
 	var to_auth_camera_global = _auth_camera.global_transform.origin - global_transform.origin
 	var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
 	
-	var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
-	%StateMachine.current_state.animation.play(%StateMachine.current_state.name + "_" + animation_direction)
+	# var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
+	%StateMachine.current_state.animation.play(%StateMachine.current_state.name)
+	# %StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
+	#
+	var angle_rad = %InputComponent.look_direction.signed_angle_to(to_pov_local_to_target, Vector3.UP)
+	#
+	%PeerLookDir.text = str(angle_rad)
+	var rotated_vector
+	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
+		rotated_vector = Vector2(0, 1)
+	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
+		rotated_vector = Vector2(-1, 0)
+	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
+		rotated_vector = Vector2(0, -1)
+	else:
+		rotated_vector = Vector2(1, 0)
+	# var rotated_vector = to_pov_local_to_target.normalized().rotated(Vector3.UP, angle_rad).normalized()
+
+	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, rotated_vector)
 
 
 	_apply_animation_peer_client()

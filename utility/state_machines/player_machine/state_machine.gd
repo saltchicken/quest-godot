@@ -7,7 +7,7 @@ var state_transitioning : bool = false
 @onready var current_state = get_children()[0]
 
 @export var input: InputComponent
-@export var animation: AnimatedSprite3D
+@export var animation: AnimationTree
 
 func _ready():
 	for child in get_children():
