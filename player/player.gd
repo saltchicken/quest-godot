@@ -88,16 +88,23 @@ func _physics_process_peer_client(_delta):
 	#
 	var angle_rad = %InputComponent.look_direction.signed_angle_to(to_pov_local_to_target, Vector3.UP)
 	#
-	%PeerLookDir.text = str(angle_rad)
 	var rotated_vector
-	if angle_rad >= -PI / 4 and angle_rad < PI / 4:
-		rotated_vector = Vector2(0, 1)
-	elif angle_rad >= PI / 4 and angle_rad < 3 * PI / 4:
-		rotated_vector = Vector2(-1, 0)
-	elif angle_rad >= 3 * PI / 4 or angle_rad < -3 * PI / 4:
-		rotated_vector = Vector2(0, -1)
-	else:
-		rotated_vector = Vector2(1, 0)
+	if angle_rad >= -PI/8 and angle_rad < PI/8:
+		rotated_vector = Vector2(0, 1)		# N
+	elif angle_rad >= PI/8 and angle_rad < 3*PI/8:
+		rotated_vector = Vector2(-0.7, 0.7) # NW
+	elif angle_rad >= 3*PI/8 and angle_rad < 5*PI/8:
+		rotated_vector = Vector2(-1, 0)		# W
+	elif angle_rad >= 5*PI/8 and angle_rad < 7*PI/8:
+		rotated_vector = Vector2(-0.7, -0.7) # SW
+	elif angle_rad >= 7*PI/8 or angle_rad < -7*PI/8:
+		rotated_vector = Vector2(0, -1)		# S
+	elif angle_rad >= -7*PI/8 and angle_rad < -5*PI/8:
+		rotated_vector = Vector2(0.7, -0.7) # SE
+	elif angle_rad >= -5*PI/8 and angle_rad < -3*PI/8:
+		rotated_vector = Vector2(1, 0)		# E
+	else: # angle_rad >= -3*PI/8 and angle_rad < -PI/8
+		rotated_vector = Vector2(0.7, 0.7)	# NE
 	# var rotated_vector = to_pov_local_to_target.normalized().rotated(Vector3.UP, angle_rad).normalized()
 
 	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, rotated_vector)
@@ -156,86 +163,86 @@ func _apply_movement_from_input(delta):
 
 	# Set animation state based on server-side logic (without direction)
 	# if not alive:
-	# 	current_animation_base = "death"
-	# 	animation_speed = 1.0
-	# 	return
+	#	current_animation_base = "death"
+	#	animation_speed = 1.0
+	#	return
 	#
 	# # Handle push animation
 	# if push_animation_timer > 0:
-	# 	current_animation_base = "push"
-	# 	animation_speed = 1.0
-	# 	return
+	#	current_animation_base = "push"
+	#	animation_speed = 1.0
+	#	return
 	#
 	# # Handle jump animation
 	# if jump_animation_timer > 0:
-	# 	current_animation_base = "jump"
-	# 	animation_speed = 1.0
-	# 	return
+	#	current_animation_base = "jump"
+	#	animation_speed = 1.0
+	#	return
 		
 	# Handle movement animations
 	# if input_dir.length() > 0.1:
-	# 	if input_run:
-	# 		current_animation_base = "run"
-	# 		animation_speed = 1.0
-	# 	else:
-	# 		current_animation_base = "walk"
-	# 		animation_speed = 1.0
+	#	if input_run:
+	#		current_animation_base = "run"
+	#		animation_speed = 1.0
+	#	else:
+	#		current_animation_base = "walk"
+	#		animation_speed = 1.0
 	# else:
-	# 	current_animation_base = "idle"
-	# 	animation_speed = 1.0
+	#	current_animation_base = "idle"
+	#	animation_speed = 1.0
 
 # func perform_push_attack():
-# 	if not multiplayer.is_server():
-# 		return
+#	if not multiplayer.is_server():
+#		return
 #
-# 	# Get synchronized input from client
-# 	var input_dir = %InputSynchronizer.input_dir
-# 	var forward_direction = Vector3.ZERO
+#	# Get synchronized input from client
+#	var input_dir = %InputSynchronizer.input_dir
+#	var forward_direction = Vector3.ZERO
 #
-# 	if input_dir.length() > 0.1:
-# 		# Use the input direction directly to determine push direction
-# 		# Convert 2D input to 3D direction
-# 		forward_direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
-# 	else:
-# 		# If no input direction, use the character's last known direction
-# 		var direction_map = {
-# 			"up": Vector3(0, 0, -1),
-# 			"down": Vector3(0, 0, 1),
-# 			"left": Vector3(-1, 0, 0),
-# 			"right": Vector3(1, 0, 0)
-# 		}
-# 		forward_direction = direction_map[last_direction]
+#	if input_dir.length() > 0.1:
+#		# Use the input direction directly to determine push direction
+#		# Convert 2D input to 3D direction
+#		forward_direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
+#	else:
+#		# If no input direction, use the character's last known direction
+#		var direction_map = {
+#			"up": Vector3(0, 0, -1),
+#			"down": Vector3(0, 0, 1),
+#			"left": Vector3(-1, 0, 0),
+#			"right": Vector3(1, 0, 0)
+#		}
+#		forward_direction = direction_map[last_direction]
 #
-# 	# Find players in radius
-# 	print(forward_direction)
-# 	print(last_direction)
-# 	var players = get_tree().get_nodes_in_group("players")
+#	# Find players in radius
+#	print(forward_direction)
+#	print(last_direction)
+#	var players = get_tree().get_nodes_in_group("players")
 #
-# 	for other_player in players:
-# 		if other_player == self:
-# 			continue
+#	for other_player in players:
+#		if other_player == self:
+#			continue
 #
-# 		# Calculate vector to other player (ignoring Y)
-# 		var to_other = other_player.global_position - global_position
-# 		var to_other_flat = Vector3(to_other.x, 0, to_other.z)
-# 		var distance = to_other_flat.length()
+#		# Calculate vector to other player (ignoring Y)
+#		var to_other = other_player.global_position - global_position
+#		var to_other_flat = Vector3(to_other.x, 0, to_other.z)
+#		var distance = to_other_flat.length()
 #
-# 		# Check if player is within push radius
-# 		if distance < PUSH_RADIUS:
-# 			# Calculate push direction (away from pusher)
-# 			var push_dir = to_other.normalized()
-# 			var final_push_dir = push_dir * PUSH_FORCE
-# 			final_push_dir.y = 0
+#		# Check if player is within push radius
+#		if distance < PUSH_RADIUS:
+#			# Calculate push direction (away from pusher)
+#			var push_dir = to_other.normalized()
+#			var final_push_dir = push_dir * PUSH_FORCE
+#			final_push_dir.y = 0
 #
-# 			# Apply push on server
-# 			other_player.velocity += final_push_dir
-# 			# Send RPC to client
-# 			apply_push.rpc_id(int(other_player.name), final_push_dir)
+#			# Apply push on server
+#			other_player.velocity += final_push_dir
+#			# Send RPC to client
+#			apply_push.rpc_id(int(other_player.name), final_push_dir)
 
 # @rpc("authority")
 # func apply_push(push_vector):
-# 	velocity += push_vector
-# 	print("Push received: " + str(push_vector))
+#	velocity += push_vector
+#	print("Push received: " + str(push_vector))
 
 func _on_lava_entered(body):
 	if not multiplayer.is_server():
@@ -258,8 +265,8 @@ func player_died():
 	# tween.tween_property(animated_sprite, "modulate", Color(0, 0, 0, 1), 2.0)
 	#
 	# if multiplayer.get_unique_id() == name.to_int():
-	# 	%InputSynchronizer.set_process(false)
-	# 	%InputSynchronizer.set_physics_process(false)
+	#	%InputSynchronizer.set_process(false)
+	#	%InputSynchronizer.set_physics_process(false)
 
 @rpc("authority")
 func player_respawned():
@@ -268,8 +275,8 @@ func player_respawned():
 	# animated_sprite.modulate = Color(1, 1, 1, 1)
 	# animated_sprite.play("idle_down")
 	# if multiplayer.get_unique_id() == name.to_int():
-	# 	%InputSynchronizer.set_process(true)
-	# 	%InputSynchronizer.set_physics_process(true)
+	#	%InputSynchronizer.set_process(true)
+	#	%InputSynchronizer.set_physics_process(true)
 
 func _on_ping_updated(ping_value):
 	if multiplayer.get_unique_id() == name.to_int():
