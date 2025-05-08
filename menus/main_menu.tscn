@@ -1,11 +1,11 @@
 [gd_scene load_steps=2 format=3 uid="uid://c0eklroxr4765"]
 
-[ext_resource type="Script" uid="uid://45rqw1es1ea6" path="res://main_menu.gd" id="1_06t4h"]
+[ext_resource type="Script" uid="uid://45rqw1es1ea6" path="res://menus/main_menu.gd" id="1_8gy84"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 0
-script = ExtResource("1_06t4h")
+script = ExtResource("1_8gy84")
 
 [node name="Join" type="Button" parent="."]
 unique_name_in_owner = true

@@ -4,7 +4,7 @@ const SERVER_PORT = 30980
 # const SERVER_IP = "ec2-54-241-111-126.us-west-1.compute.amazonaws.com"
 const SERVER_IP = "main"
 
-var player_scene = preload("res://player.tscn")
+var player_scene = preload("res://player/player.tscn")
 var _players_spawn_node
 
 signal game_state_changed(key, value)
@@ -48,7 +48,7 @@ func become_host():
 	self.load_world()
 
 func load_world():
-	var scene = preload("res://Game.tscn").instantiate()
+	var scene = preload("res://levels/Game.tscn").instantiate()
 	get_tree().root.add_child.call_deferred(scene)
 
 var _connection_callback = null
@@ -116,7 +116,7 @@ func _peer_disconnected(id: int):
 		_players_spawn_node.get_node(str(id)).queue_free()
 
 func StartGame():
-	var scene = preload("res://Game.tscn").instantiate()
+	var scene = preload("res://levels/Game.tscn").instantiate()
 	get_tree().root.add_child(scene)
 	# var scene = preload("res://Game.tscn")
 	# print(get_tree().get_current_scene().name)

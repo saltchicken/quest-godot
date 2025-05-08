@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tunf1xiuva2y"
-path.s3tc="res://.godot/imported/char_a_p1_0bas_demn_v01.png-c2ce25693a7839bed76d36bf73028935.s3tc.ctex"
+uid="uid://crwwe303mqwup"
+path.s3tc="res://.godot/imported/lava.webp-c486645331263ffe0a853aa02dd9db7c.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://char_a_p1_0bas_demn_v01.png"
-dest_files=["res://.godot/imported/char_a_p1_0bas_demn_v01.png-c2ce25693a7839bed76d36bf73028935.s3tc.ctex"]
+source_file="res://assets/lava.webp"
+dest_files=["res://.godot/imported/lava.webp-c486645331263ffe0a853aa02dd9db7c.s3tc.ctex"]
 
 [params]
 
