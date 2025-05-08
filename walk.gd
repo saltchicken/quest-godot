@@ -3,11 +3,10 @@ extends State
 func enter_server(_params):
 	print("Enter Server Walk")
 
-func enter_process_authority_client(_params):
-	print("hello")
+func enter_authority_client(_params):
 	pass
 
-func enter_process_peer_client(_params):
+func enter_peer_client(_params):
 	pass
 	
 func exit_server():
