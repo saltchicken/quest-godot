@@ -10,6 +10,10 @@ func exit_server():
 func Update(_delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
+	var input_jump = %InputComponent.input_jump
+
+	if input_jump:
+		owner.change_state.emit("jump")
 	
 	if input_dir.length() > 0.1:
 		if input_run:

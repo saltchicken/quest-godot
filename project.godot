@@ -19,11 +19,6 @@ config/features=PackedStringArray("4.4", "Forward Plus")
 GameManager="*res://Autoloads/GameManager.gd"
 PingManager="*res://Autoloads/PingManager.gd"
 
-[display]
-
-window/size/viewport_width=2304
-window/size/viewport_height=1296
-
 [input]
 
 jump={
