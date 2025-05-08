@@ -13,8 +13,6 @@ signal change_state(new_state_name)
 var _is_on_floor = false
 var _alive = true
 
-var _authority_player = null
-var _auth_camera = null
 
 const SPEED = 2.5
 const RUN_SPEED = 4.2
@@ -50,67 +48,13 @@ func _physics_process_server(delta):
 		_apply_movement_from_input(delta)
 
 func _physics_process_authority_client(_delta):
-	# var player_forward = -global_transform.basis.z.normalized()
-	%AuthorityLookDir.text = "Input: " + str(%InputComponent.look_direction)
-	%AuthorityState.text = "State: " + str(%StateMachine.current_state)
-	# var animation_direction = facing_direction_vector_to_ordinal(%InputComponent.look_direction)
-	# %StateMachine.current_state.animation.play(%StateMachine.current_state.name)
-	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
-	# print(%InputComponent.look_direction)
-	
-	
-	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-		pass
-
-	_apply_animation_authority_client()
+	state_machine._physics_process_state_machine_authority_client(_delta)
 
 func _physics_process_peer_client(_delta):
-	# var player_forward = -global_transform.basis.z.normalized()
-	%PeerState.text = "State: " + str(%StateMachine.current_state)
-
-	if _authority_player == null:
-		_authority_player = _find_authority_player()
-		_auth_camera = _authority_player.get_node_or_null("CameraPivot/Camera3D")
-		# var to_authority = authority_player.global_position - global_position
-		# to_authority.y = 0	# Project onto horizontal plane
-		# to_authority = to_authority.normalized()
-
-		# var to_target_global = global_transform.origin - auth_camera.global_transform.origin
-		# var to_target_local_to_pov = auth_camera.global_transform.basis.inverse() * to_target_global
-
-	# TODO: Should not need the if statements. Need to calculate the rotated vector properly for the direction
-	var to_auth_camera_global = _auth_camera.global_transform.origin - global_transform.origin
-	var to_pov_local_to_target = global_transform.basis.inverse() * to_auth_camera_global
-	
-	# var animation_direction = facing_direction_vector_to_ordinal(to_pov_local_to_target, Vector3(%InputComponent.look_direction.x, 0, %InputComponent.look_direction.z))
-	# %StateMachine.current_state.animation.play(%StateMachine.current_state.name)
-	# %StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
-	#
-	var angle_rad = %InputComponent.look_direction.signed_angle_to(to_pov_local_to_target, Vector3.UP)
-	#
-	var rotated_vector
-	if angle_rad >= -PI/8 and angle_rad < PI/8:
-		rotated_vector = Vector2(0, 1)		# N
-	elif angle_rad >= PI/8 and angle_rad < 3*PI/8:
-		rotated_vector = Vector2(-0.7, 0.7) # NW
-	elif angle_rad >= 3*PI/8 and angle_rad < 5*PI/8:
-		rotated_vector = Vector2(-1, 0)		# W
-	elif angle_rad >= 5*PI/8 and angle_rad < 7*PI/8:
-		rotated_vector = Vector2(-0.7, -0.7) # SW
-	elif angle_rad >= 7*PI/8 or angle_rad < -7*PI/8:
-		rotated_vector = Vector2(0, -1)		# S
-	elif angle_rad >= -7*PI/8 and angle_rad < -5*PI/8:
-		rotated_vector = Vector2(0.7, -0.7) # SE
-	elif angle_rad >= -5*PI/8 and angle_rad < -3*PI/8:
-		rotated_vector = Vector2(1, 0)		# E
-	else: # angle_rad >= -3*PI/8 and angle_rad < -PI/8
-		rotated_vector = Vector2(0.7, 0.7)	# NE
-	# var rotated_vector = to_pov_local_to_target.normalized().rotated(Vector3.UP, angle_rad).normalized()
-
-	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, rotated_vector)
+	state_machine._physics_process_state_machine_peer_client(_delta)
 
 
-	_apply_animation_peer_client()
+	# _apply_animation_peer_client()
 
 func _apply_animation_authority_client():
 	pass
@@ -118,14 +62,6 @@ func _apply_animation_authority_client():
 func _apply_animation_peer_client():
 	pass
 
-func _find_authority_player():
-	var players = get_tree().get_nodes_in_group("players")
-	for player in players:
-		if player.name.to_int() == name.to_int():
-			continue  # Skip self
-		if player.role == Role.AUTHORITY_CLIENT:
-			return player
-	return null
 
 func _on_change_state(new_state_name):
 	if multiplayer.is_server():

@@ -7,7 +7,7 @@ func exit_server():
 	print("Exit Server Run")
 	return state_packet
 
-func Update(delta:float):
+func update_server(delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
 	var input_jump = %InputComponent.input_jump

@@ -7,7 +7,7 @@ func exit_server():
 	print("Exit Server Idle")
 	return state_packet
 
-func Update(_delta:float):
+func update_server(_delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
 	var input_jump = %InputComponent.input_jump

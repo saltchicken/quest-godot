@@ -27,7 +27,19 @@ func  _physics_process_state_machine(delta): # TODO: Should this be _physics or 
 	# if current_state:
 	if state_transitioning:
 		push_warning('StateMachine update called while transitioning')
-	current_state.Update(delta)
+	current_state.update_server(delta)
+
+func _physics_process_state_machine_authority_client(delta):
+	# if current_state:
+	if state_transitioning:
+		push_warning('StateMachine update called while transitioning')
+	current_state.update_authority_client(delta)
+
+func _physics_process_state_machine_peer_client(delta):
+	# if current_state:
+	if state_transitioning:
+		push_warning('StateMachine update called while transitioning')
+	current_state.update_peer_client(delta)
 	
 func change_state(source_state : State, new_state_name : String):
 	state_transitioning = true
