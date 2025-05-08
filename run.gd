@@ -1,6 +1,6 @@
 extends State
 
-func Enter():
+func Enter(params):
 	# animation.set_direction(self.name, input.direction)
 	print("Enter Run")
 	
@@ -17,9 +17,6 @@ func Update(delta:float):
 	else:
 		if !input_run:
 			owner.change_state.emit("walk")
-
-	owner.velocity.x *= (1.0 - owner.FRICTION)
-	owner.velocity.z *= (1.0 - owner.FRICTION)
 
 	var current_speed = owner.SPEED
 	if input_run:

@@ -44,10 +44,7 @@ func change_state(source_state : State, new_state_name : String, params = null):
 	if current_state:
 		current_state.Exit()
 		
-	#print_debug('Entering ' + new_state_name) # For debugging state changes
-	if params != null:
-		new_state.Enter(params)
-	else:
-		new_state.Enter()
+	new_state.Enter(params)
+
 	current_state = new_state
 	state_transitioning = false

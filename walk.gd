@@ -1,6 +1,6 @@
 extends State
 
-func Enter():
+func Enter(params):
 	# animation.set_direction(self.name, input.direction)
 	print("Enter Walk")
 	
@@ -11,9 +11,6 @@ func Exit():
 func Update(delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
-
-	owner.velocity.x *= (1.0 - owner.FRICTION)
-	owner.velocity.z *= (1.0 - owner.FRICTION)
 
 	if !input_dir:
 		owner.change_state.emit("idle")

@@ -155,6 +155,9 @@ func _apply_movement_from_input(delta):
 	# Apply gravity
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+	else:
+		velocity.x *= (1.0 - FRICTION)
+		velocity.z *= (1.0 - FRICTION)
 	
 	
 	# Apply movement
