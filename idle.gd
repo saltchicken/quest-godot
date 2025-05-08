@@ -4,10 +4,10 @@ func enter_server(_params):
 	print("Enter Idle")
 
 func enter_process_authority_client(_params):
-	print("Enter Idle")
+	pass
 
 func enter_process_peer_client(_params):
-	print("Enter Idle")
+	pass
 
 func Exit():
 	print("Exit Idle")
