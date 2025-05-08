@@ -4,13 +4,19 @@ func enter_server(_params):
 	print("Enter Server Walk")
 
 func enter_process_authority_client(_params):
+	print("hello")
 	pass
 
 func enter_process_peer_client(_params):
 	pass
 	
-func Exit():
-	print("Exit Walk")
+func exit_server():
+	print("Exit Server Walk")
+
+func exit_authority_client():
+	pass
+
+func exit_peer_client():
 	pass
 	
 func Update(delta:float):

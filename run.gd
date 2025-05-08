@@ -1,7 +1,7 @@
 extends State
 
 func enter_server(_params):
-	print("Enter Run")
+	print("Enter Server Run")
 
 func enter_process_authority_client(_params):
 	pass
@@ -9,8 +9,13 @@ func enter_process_authority_client(_params):
 func enter_process_peer_client(_params):
 	pass
 	
-func Exit():
-	print("Exit Run")
+func exit_server():
+	print("Exit Server Run")
+
+func exit_authority_client():
+	pass
+
+func exit_peer_client():
 	pass
 	
 func Update(delta:float):

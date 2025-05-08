@@ -1,7 +1,7 @@
 extends State
 
 func enter_server(_params):
-	print("Enter Idle")
+	print("Enter Server Idle")
 
 func enter_process_authority_client(_params):
 	pass
@@ -9,8 +9,14 @@ func enter_process_authority_client(_params):
 func enter_process_peer_client(_params):
 	pass
 
-func Exit():
-	print("Exit Idle")
+func exit_server():
+	print("Exit Server Idle")
+
+func exit_authority_client():
+	pass
+
+func exit_peer_client():
+	pass
 
 func Update(_delta:float):
 	var input_dir = %InputComponent.input_direction
