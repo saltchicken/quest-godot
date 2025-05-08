@@ -29,7 +29,7 @@ func  _physics_process_state_machine(delta): # TODO: Should this be _physics or 
 		push_warning('StateMachine update called while transitioning')
 	current_state.Update(delta)
 	
-func change_state(source_state : State, new_state_name : String, params = null):
+func change_state(source_state : State, new_state_name : String):
 	state_transitioning = true
 	if source_state != current_state:
 		print("Invalid change_state trying from: " + source_state.name + " but currently in: " + current_state.name)
@@ -40,20 +40,20 @@ func change_state(source_state : State, new_state_name : String, params = null):
 	if !new_state:
 		print("New state is empty")
 		return
-		
-	match owner.role:
-		owner.Role.SERVER:
-			if current_state:
-				current_state.exit_server()
-			new_state.enter_server(params)
-		owner.Role.AUTHORITY_CLIENT:
-			if current_state:
-				current_state.exit_authority_client()
-			new_state.enter_authority_client(params)
-		owner.Role.PEER_CLIENT:
-			if current_state:
-				current_state.exit_peer_client()
-			new_state.enter_peer_client(params)
+
+	if current_state:
+		match owner.role:
+			owner.Role.SERVER:
+				var state_packet = current_state.exit_server()
+				new_state.enter_server(state_packet)
+			owner.Role.AUTHORITY_CLIENT:
+				var state_packet = current_state.exit_authority_client()
+				new_state.enter_authority_client(state_packet)
+			owner.Role.PEER_CLIENT:
+				var state_packet = current_state.exit_peer_client()
+				new_state.enter_peer_client(state_packet)
+	else:
+		print("There was no current state. This shouldn't be possible")
 
 	current_state = new_state
 	state_transitioning = false

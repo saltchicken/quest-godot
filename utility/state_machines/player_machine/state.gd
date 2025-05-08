@@ -9,17 +9,25 @@ class_name State
 @warning_ignore("unused_signal")
 signal state_transition
 
-func enter_server(params):
+var state_packet
+
+func enter_server(_state_packet):
 	pass
 
-func enter_process_authority_client(params):
+func enter_authority_client(_state_packet):
 	pass
 
-func enter_process_peer_client(params):
+func enter_peer_client(_state_packet):
 	pass
 	
-func Exit():
-	pass
+func exit_server():
+	return state_packet
+
+func exit_authority_client():
+	return state_packet
+
+func exit_peer_client():
+	return state_packet
 	
 func Update(_delta:float):
 	pass

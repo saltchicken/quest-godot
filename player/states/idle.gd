@@ -1,22 +1,11 @@
 extends State
 
-func enter_server(_params):
+func enter_server(_state_packet):
 	print("Enter Server Idle")
-
-func enter_authority_client(_params):
-	pass
-
-func enter_peer_client(_params):
-	pass
 
 func exit_server():
 	print("Exit Server Idle")
-
-func exit_authority_client():
-	pass
-
-func exit_peer_client():
-	pass
+	return state_packet
 
 func Update(_delta:float):
 	var input_dir = %InputComponent.input_direction

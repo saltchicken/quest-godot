@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://tunf1xiuva2y" path="res://assets/char_a_p1_0bas_demn_v01.png" id="2_hg6s5"]
 [ext_resource type="Script" uid="uid://c3p0vg8fygcok" path="res://player/player_input.gd" id="3_8t03j"]
 [ext_resource type="Script" uid="uid://088x8xx047t8" path="res://utility/debug_stats.gd" id="4_2ieo8"]
-[ext_resource type="Script" uid="uid://g54h3qgdivex" path="res://utility/state_machine.gd" id="5_ebec5"]
+[ext_resource type="Script" uid="uid://g54h3qgdivex" path="res://utility/state_machines/player_machine/state_machine.gd" id="5_ebec5"]
 [ext_resource type="Script" uid="uid://cvviopkgfalex" path="res://player/states/idle.gd" id="6_yllr7"]
 [ext_resource type="Script" uid="uid://dgal0pcamogrt" path="res://player/states/run.gd" id="7_kb6p2"]
 [ext_resource type="Script" uid="uid://e4ab8h0jrls1" path="res://player/states/walk.gd" id="8_wodsf"]

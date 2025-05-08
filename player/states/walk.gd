@@ -1,23 +1,12 @@
 extends State
 
-func enter_server(_params):
+func enter_server(_state_packet):
 	print("Enter Server Walk")
 
-func enter_authority_client(_params):
-	pass
-
-func enter_peer_client(_params):
-	pass
-	
 func exit_server():
 	print("Exit Server Walk")
+	return state_packet
 
-func exit_authority_client():
-	pass
-
-func exit_peer_client():
-	pass
-	
 func Update(delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
