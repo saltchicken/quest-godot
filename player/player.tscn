@@ -1721,9 +1721,9 @@ root_node = NodePath(".")
 tree_root = SubResource("AnimationNodeStateMachine_hg6s5")
 anim_player = NodePath("AnimationPlayer")
 parameters/idle/BlendSpace2D/blend_position = Vector2(-0.529036, 0.772595)
-parameters/idle/TimeScale/scale = 1.0
+parameters/idle/TimeScale/scale = 0.5
 parameters/run/BlendSpace2D/blend_position = Vector2(0, 0)
-parameters/run/TimeScale/scale = 1.0
+parameters/run/TimeScale/scale = 1.25
 parameters/walk/BlendSpace2D/blend_position = Vector2(0, 0)
 parameters/walk/TimeScale/scale = 1.0
 script = ExtResource("9_hg6s5")
@@ -1743,6 +1743,6 @@ texture_filter = 0
 texture = ExtResource("11_ebec5")
 hframes = 8
 vframes = 8
-frame = 45
+frame = 47
 
 [connection signal="pressed" from="PauseMenu/HBoxContainer/VBoxContainer/Button" to="InputComponent" method="leave_game"]
