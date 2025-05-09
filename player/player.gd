@@ -17,25 +17,34 @@ const SPEED = 2.5
 const RUN_SPEED = 4.2
 const FRICTION = 0.2
 
-func debug(message):
-	print("%s: %s" % [name, message])
-
 func _enter_tree():
 	%InputComponent.set_multiplayer_authority(name.to_int())
 
 func _ready_server():
 	add_to_group("players")
-	var lava_areas = get_tree().get_nodes_in_group("lava")
-	for lava in lava_areas:
-		lava.body_entered.connect(_on_lava_entered)
 
 	$InteractionArea.body_entered.connect(_on_interaction_area_body_entered)
 	$InteractionArea.body_exited.connect(_on_interaction_area_body_exited)
 
+func _handle_sliding_collisions():
+	for i in get_slide_collision_count():
+		var collision = get_slide_collision(i)
+		if collision.get_collider() is StaticBody3D:
+			if collision.get_collider().name == "Lava":
+				print("Lava entered")
+				_alive = false
+				player_died.rpc()
+				await get_tree().create_timer(3.0).timeout
+				global_position = Vector3(0, 3, 0)	# Respawn position
+				_alive = true
+				player_respawned.rpc()
+				return
+				# Handle the collision with the static body
+
 func _on_interaction_area_body_entered(body):
-	print("interaction")
 	if body is StaticBody3D:
 		print("Player near StaticBody: ", body.name)
+
 	if body is RigidBody3D:
 		print("Pushing body")
 		push_rigid_body_away(body, 3)
@@ -52,14 +61,11 @@ func push_rigid_body_away(body: RigidBody3D, push_force: float = 10.0):
 	if not multiplayer.is_server():
 		return
 	
-	# Calculate direction from object to player (then reverse it)
 	var direction_from_player = global_position - body.global_position
 	
-	# Flatten and normalize
 	direction_from_player.y = 0
 	direction_from_player = direction_from_player.normalized() * -1
 	
-	# Apply impulse
 	body.apply_impulse(direction_from_player * push_force)
 
 func _ready_authority_client():
@@ -84,26 +90,14 @@ func _physics_process_server(delta):
 			velocity.x *= (1.0 - FRICTION)
 			velocity.z *= (1.0 - FRICTION)
 		
-		move_and_slide()
+		if move_and_slide():
+			_handle_sliding_collisions()
 
 func _physics_process_authority_client(_delta):
 	state_machine._physics_process_state_machine_authority_client(_delta)
 
 func _physics_process_peer_client(_delta):
 	state_machine._physics_process_state_machine_peer_client(_delta)
-
-
-
-func _on_lava_entered(body):
-	if not multiplayer.is_server():
-		return
-	if body == self:
-		_alive = false
-		player_died.rpc()
-		await get_tree().create_timer(3.0).timeout
-		global_position = Vector3(0, 3, 0)	# Respawn position
-		_alive = true
-		player_respawned.rpc()
 
 @rpc("authority")
 func player_died():
@@ -114,9 +108,11 @@ func player_died():
 	# var tween = create_tween()
 	# tween.tween_property(animated_sprite, "modulate", Color(0, 0, 0, 1), 2.0)
 	#
-	# if multiplayer.get_unique_id() == name.to_int():
-	#	%InputSynchronizer.set_process(false)
-	#	%InputSynchronizer.set_physics_process(false)
+	self.set_process(false)
+	self.set_physics_process(false)
+	if multiplayer.get_unique_id() == name.to_int():
+		%InputComponent.set_process(false)
+		%InputComponent.set_physics_process(false)
 
 @rpc("authority")
 func player_respawned():
@@ -124,9 +120,11 @@ func player_respawned():
 	print("Do stuff for player respawn")
 	# animated_sprite.modulate = Color(1, 1, 1, 1)
 	# animated_sprite.play("idle_down")
-	# if multiplayer.get_unique_id() == name.to_int():
-	#	%InputSynchronizer.set_process(true)
-	#	%InputSynchronizer.set_physics_process(true)
+	self.set_process(true)
+	self.set_physics_process(true)
+	if multiplayer.get_unique_id() == name.to_int():
+		%InputComponent.set_process(true)
+		%InputComponent.set_physics_process(true)
 
 func _on_ping_updated(ping_value):
 	if multiplayer.get_unique_id() == name.to_int():
