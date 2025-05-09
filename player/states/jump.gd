@@ -26,14 +26,14 @@ func update_server(_delta:float):
 	# 		jumping = false
 
 	# if owner.is_on_floor() and !jumping:
-	if owner.is_on_floor():
+	if state_machine.is_on_floor():
 		if input_dir.length() > 0.1:
 			if input_run:
-				owner.change_state.emit("run")
+				state_machine.change_state.emit("run")
 			else:
-				owner.change_state.emit("walk")
+				state_machine.change_state.emit("walk")
 		else:
-			owner.change_state.emit("idle")
+			state_machine.change_state.emit("idle")
 	# if owner.is_on_floor():
 	# 	owner.change_state.emit("idle")
 	# var input_dir = %InputComponent.input_direction

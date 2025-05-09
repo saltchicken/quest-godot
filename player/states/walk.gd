@@ -13,12 +13,12 @@ func update_server(delta:float):
 	var input_jump = %InputComponent.input_jump
 
 	if input_jump:
-		owner.change_state.emit("jump")
+		state_machine.change_state.emit("jump")
 	if !input_dir:
-		owner.change_state.emit("idle")
+		state_machine.change_state.emit("idle")
 	else:
 		if input_run:
-			owner.change_state.emit("run")
+			state_machine.change_state.emit("run")
 
 	var current_speed = owner.SPEED
 	if input_run:

@@ -6,6 +6,8 @@ class_name State
 @onready var input = get_parent().get_node_or_null("InputComponent")
 @onready var animation = get_parent().animation
 
+@onready var state_machine = get_parent() as FiniteStateMachine
+
 @warning_ignore("unused_signal")
 signal state_transition
 
@@ -19,8 +21,6 @@ func enter_server(_state_packet):
 	pass
 
 func enter_authority_client(_state_packet):
-	print("Enterred")
-	print(%StateMachine.current_state.name)
 	animation.play(name)
 	animation.set_direction(name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
 	# %StateMachine.current_state.animation.set_speed_scale(%StateMachine.current_state.name, 10.0)

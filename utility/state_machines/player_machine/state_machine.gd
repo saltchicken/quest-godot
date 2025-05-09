@@ -4,6 +4,8 @@ class_name FiniteStateMachine
 var states : Dictionary = {}
 var state_transitioning : bool = false
 
+signal change_state(new_state_name)
+
 @onready var current_state = get_children()[0]
 
 @export var input: InputComponent
@@ -13,11 +15,12 @@ func _ready():
 	for child in get_children():
 		if child is State:
 			states[child.name.to_lower()] = child
-			child.state_transition.connect(change_state)
+			child.state_transition.connect(_change_state)
 
 	await owner.ready
 	match owner.role:
 		owner.Role.SERVER:
+			change_state.connect(_on_change_state)
 			current_state.enter_server(null)
 		owner.Role.AUTHORITY_CLIENT:
 			current_state.enter_authority_client(null)
@@ -49,8 +52,18 @@ func _physics_process_state_machine_peer_client(delta):
 	if state_transitioning:
 		push_warning('StateMachine update called while transitioning')
 	current_state.update_peer_client(delta)
-	
-func change_state(source_state : State, new_state_name : String):
+
+func _on_change_state(new_state_name):
+	if multiplayer.is_server():
+		if current_state.name == new_state_name:
+			# print("Already in state: " + new_state_name)
+			return
+		current_state.state_transition.emit(current_state, new_state_name)
+		broadcast_state_change.rpc(new_state_name)
+	else:
+		print("This is a problem")
+
+func _change_state(source_state : State, new_state_name : String):
 	state_transitioning = true
 	if source_state != current_state:
 		print("Invalid change_state trying from: " + source_state.name + " but currently in: " + current_state.name)
@@ -80,3 +93,14 @@ func change_state(source_state : State, new_state_name : String):
 		print("There was no current state. This shouldn't be possible")
 
 	state_transitioning = false
+
+
+@rpc("authority")
+func broadcast_state_change(new_state_name):
+	if not multiplayer.is_server():
+		if current_state.name == new_state_name:
+			# print("Already in state: " + new_state_name)
+			return
+		current_state.state_transition.emit(current_state, new_state_name)
+	else:
+		print("This is also a problem")
