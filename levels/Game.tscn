@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://bs7mo7ss2w0ft"]
+[gd_scene load_steps=20 format=3 uid="uid://bs7mo7ss2w0ft"]
 
 [ext_resource type="Script" uid="uid://bpwa18bghyk3n" path="res://levels/game.gd" id="1_18vqw"]
 [ext_resource type="Texture2D" uid="uid://d25ror1qy41nu" path="res://assets/assets_task_01jt9b9tjhfcjvrkbemkz2fbdm_1746218082_img_0.webp" id="2_sdsdh"]
@@ -63,6 +63,18 @@ sky = SubResource("Sky_3mrqo")
 ambient_light_source = 1
 reflected_light_source = 1
 
+[sub_resource type="BoxMesh" id="BoxMesh_18vqw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sdsdh"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_18vqw"]
+properties/0/path = NodePath("TestBox:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath("TestBox:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="Game" type="Node3D"]
 script = ExtResource("1_18vqw")
 
@@ -110,3 +122,15 @@ unique_name_in_owner = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_t88pq")
+
+[node name="TestBox" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.49766, 3.00546, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="TestBox"]
+mesh = SubResource("BoxMesh_18vqw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TestBox"]
+shape = SubResource("BoxShape3D_sdsdh")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_18vqw")

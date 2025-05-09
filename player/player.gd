@@ -3,7 +3,6 @@ extends CharacterBody3D
 enum Role {SERVER, AUTHORITY_CLIENT, PEER_CLIENT}
 var role = Role.PEER_CLIENT
 
-signal change_state(new_state_name)
 
 @onready var camera = $CameraPivot/Camera3D
 @onready var player_name_label = %PlayerNameLabel
@@ -25,11 +24,43 @@ func _enter_tree():
 	%InputComponent.set_multiplayer_authority(name.to_int())
 
 func _ready_server():
-	change_state.connect(_on_change_state)
 	add_to_group("players")
 	var lava_areas = get_tree().get_nodes_in_group("lava")
 	for lava in lava_areas:
 		lava.body_entered.connect(_on_lava_entered)
+
+	$InteractionArea.body_entered.connect(_on_interaction_area_body_entered)
+	$InteractionArea.body_exited.connect(_on_interaction_area_body_exited)
+
+func _on_interaction_area_body_entered(body):
+	print("interaction")
+	if body is StaticBody3D:
+		print("Player near StaticBody: ", body.name)
+	if body is RigidBody3D:
+		print("Pushing body")
+		push_rigid_body_away(body, 3)
+		# Handle the detection of the static body
+		#
+func _on_interaction_area_body_exited(body):
+	if body is StaticBody3D:
+		print("Player no longer near StaticBody: ", body.name)
+
+	if body is RigidBody3D:
+		print("Player no longer near RigidBody: ", body.name)
+
+func push_rigid_body_away(body: RigidBody3D, push_force: float = 10.0):
+	if not multiplayer.is_server():
+		return
+	
+	# Calculate direction from object to player (then reverse it)
+	var direction_from_player = global_position - body.global_position
+	
+	# Flatten and normalize
+	direction_from_player.y = 0
+	direction_from_player = direction_from_player.normalized() * -1
+	
+	# Apply impulse
+	body.apply_impulse(direction_from_player * push_force)
 
 func _ready_authority_client():
 	add_to_group("players")
@@ -45,7 +76,15 @@ func _ready_peer_clients():
 func _physics_process_server(delta):
 	_is_on_floor = is_on_floor()
 	if _alive:
-		_apply_movement_from_input(delta)
+		state_machine._physics_process_state_machine(delta)
+		# Apply gravity
+		if not is_on_floor():
+			velocity += get_gravity() * delta
+		else:
+			velocity.x *= (1.0 - FRICTION)
+			velocity.z *= (1.0 - FRICTION)
+		
+		move_and_slide()
 
 func _physics_process_authority_client(_delta):
 	state_machine._physics_process_state_machine_authority_client(_delta)
@@ -54,131 +93,6 @@ func _physics_process_peer_client(_delta):
 	state_machine._physics_process_state_machine_peer_client(_delta)
 
 
-	# _apply_animation_peer_client()
-
-func _apply_animation_authority_client():
-	pass
-
-func _apply_animation_peer_client():
-	pass
-
-
-func _on_change_state(new_state_name):
-	if multiplayer.is_server():
-		if state_machine.current_state.name == new_state_name:
-			# print("Already in state: " + new_state_name)
-			return
-		state_machine.current_state.state_transition.emit(state_machine.current_state, new_state_name)
-		broadcast_state_change.rpc(new_state_name)
-	else:
-		print("This is a problem")
-
-@rpc("authority")
-func broadcast_state_change(new_state_name):
-	if not multiplayer.is_server():
-		if state_machine.current_state.name == new_state_name:
-			# print("Already in state: " + new_state_name)
-			return
-		state_machine.current_state.state_transition.emit(state_machine.current_state, new_state_name)
-	else:
-		print("This is also a problem")
-
-
-func _apply_movement_from_input(delta):
-	state_machine._physics_process_state_machine(delta)
-	# Apply gravity
-	if not is_on_floor():
-		velocity += get_gravity() * delta
-	else:
-		velocity.x *= (1.0 - FRICTION)
-		velocity.z *= (1.0 - FRICTION)
-	
-	
-	# Apply movement
-	move_and_slide()
-
-	# Set animation state based on server-side logic (without direction)
-	# if not alive:
-	#	current_animation_base = "death"
-	#	animation_speed = 1.0
-	#	return
-	#
-	# # Handle push animation
-	# if push_animation_timer > 0:
-	#	current_animation_base = "push"
-	#	animation_speed = 1.0
-	#	return
-	#
-	# # Handle jump animation
-	# if jump_animation_timer > 0:
-	#	current_animation_base = "jump"
-	#	animation_speed = 1.0
-	#	return
-		
-	# Handle movement animations
-	# if input_dir.length() > 0.1:
-	#	if input_run:
-	#		current_animation_base = "run"
-	#		animation_speed = 1.0
-	#	else:
-	#		current_animation_base = "walk"
-	#		animation_speed = 1.0
-	# else:
-	#	current_animation_base = "idle"
-	#	animation_speed = 1.0
-
-# func perform_push_attack():
-#	if not multiplayer.is_server():
-#		return
-#
-#	# Get synchronized input from client
-#	var input_dir = %InputSynchronizer.input_dir
-#	var forward_direction = Vector3.ZERO
-#
-#	if input_dir.length() > 0.1:
-#		# Use the input direction directly to determine push direction
-#		# Convert 2D input to 3D direction
-#		forward_direction = Vector3(input_dir.x, 0, input_dir.y).normalized()
-#	else:
-#		# If no input direction, use the character's last known direction
-#		var direction_map = {
-#			"up": Vector3(0, 0, -1),
-#			"down": Vector3(0, 0, 1),
-#			"left": Vector3(-1, 0, 0),
-#			"right": Vector3(1, 0, 0)
-#		}
-#		forward_direction = direction_map[last_direction]
-#
-#	# Find players in radius
-#	print(forward_direction)
-#	print(last_direction)
-#	var players = get_tree().get_nodes_in_group("players")
-#
-#	for other_player in players:
-#		if other_player == self:
-#			continue
-#
-#		# Calculate vector to other player (ignoring Y)
-#		var to_other = other_player.global_position - global_position
-#		var to_other_flat = Vector3(to_other.x, 0, to_other.z)
-#		var distance = to_other_flat.length()
-#
-#		# Check if player is within push radius
-#		if distance < PUSH_RADIUS:
-#			# Calculate push direction (away from pusher)
-#			var push_dir = to_other.normalized()
-#			var final_push_dir = push_dir * PUSH_FORCE
-#			final_push_dir.y = 0
-#
-#			# Apply push on server
-#			other_player.velocity += final_push_dir
-#			# Send RPC to client
-#			apply_push.rpc_id(int(other_player.name), final_push_dir)
-
-# @rpc("authority")
-# func apply_push(push_vector):
-#	velocity += push_vector
-#	print("Push received: " + str(push_vector))
 
 func _on_lava_entered(body):
 	if not multiplayer.is_server():
