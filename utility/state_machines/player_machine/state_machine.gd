@@ -14,6 +14,15 @@ func _ready():
 		if child is State:
 			states[child.name.to_lower()] = child
 			child.state_transition.connect(change_state)
+
+	await owner.ready
+	match owner.role:
+		owner.Role.SERVER:
+			current_state.enter_server(null)
+		owner.Role.AUTHORITY_CLIENT:
+			current_state.enter_authority_client(null)
+		owner.Role.PEER_CLIENT:
+			current_state.enter_peer_client(null)
 	# await owner.ready
 	# if owner.initial_state:
 	# 	#call_deferred('_init_state')
@@ -53,19 +62,21 @@ func change_state(source_state : State, new_state_name : String):
 		print("New state is empty")
 		return
 
+	var old_state = current_state
+	current_state = new_state
+
 	if current_state:
 		match owner.role:
 			owner.Role.SERVER:
-				var state_packet = current_state.exit_server()
-				new_state.enter_server(state_packet)
+				var state_packet = old_state.exit_server()
+				current_state.enter_server(state_packet)
 			owner.Role.AUTHORITY_CLIENT:
-				var state_packet = current_state.exit_authority_client()
-				new_state.enter_authority_client(state_packet)
+				var state_packet = old_state.exit_authority_client()
+				current_state.enter_authority_client(state_packet)
 			owner.Role.PEER_CLIENT:
-				var state_packet = current_state.exit_peer_client()
-				new_state.enter_peer_client(state_packet)
+				var state_packet = old_state.exit_peer_client()
+				current_state.enter_peer_client(state_packet)
 	else:
 		print("There was no current state. This shouldn't be possible")
 
-	current_state = new_state
 	state_transitioning = false
