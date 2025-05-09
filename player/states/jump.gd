@@ -19,14 +19,14 @@ func exit_server():
 func update_server(_delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
-	var input_jump = %InputComponent.input_jump
+	# var input_jump = %InputComponent.input_jump
 	# if jumping_timer > 0:
 	# 	jumping_timer -= _delta
 	# 	if jumping_timer <= 0:
 	# 		jumping = false
 
 	# if owner.is_on_floor() and !jumping:
-	if state_machine.is_on_floor():
+	if owner.is_on_floor():
 		if input_dir.length() > 0.1:
 			if input_run:
 				state_machine.change_state.emit("run")
