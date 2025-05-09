@@ -1270,6 +1270,33 @@ tracks/1/keys = {
 "values": [Vector2i(4, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_fjxoa"]
+resource_name = "forward_left"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Sprite3D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("11_ebec5")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Sprite3D:frame_coords")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(4, 7)]
+}
+
 [sub_resource type="Animation" id="Animation_ge24q"]
 resource_name = "forward_right"
 tracks/0/type = "value"
@@ -1349,33 +1376,6 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [Vector2i(4, 2)]
-}
-
-[sub_resource type="Animation" id="Animation_fjxoa"]
-resource_name = "forward_left"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("../Sprite3D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("11_ebec5")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Sprite3D:frame_coords")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [Vector2i(4, 7)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dx5ib"]
@@ -1898,6 +1898,13 @@ script = ExtResource("1_rgyib")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.110026, 0)
 shape = SubResource("CapsuleShape3D_i3pqv")
 
+[node name="Sprite3D" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.146565, 0)
+billboard = 2
+texture_filter = 0
+hframes = 8
+vframes = 8
+
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 visible = false
 billboard = 2
@@ -2025,12 +2032,5 @@ libraries = {
 &"run": SubResource("AnimationLibrary_bjvpn"),
 &"walk": SubResource("AnimationLibrary_uw77l")
 }
-
-[node name="Sprite3D" type="Sprite3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.146565, 0)
-billboard = 2
-texture_filter = 0
-hframes = 8
-vframes = 8
 
 [connection signal="pressed" from="PauseMenu/HBoxContainer/VBoxContainer/Button" to="InputComponent" method="leave_game"]
