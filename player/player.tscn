@@ -1,4 +1,4 @@
-[gd_scene load_steps=185 format=3 uid="uid://bk6x4rvwunklf"]
+[gd_scene load_steps=186 format=3 uid="uid://bk6x4rvwunklf"]
 
 [ext_resource type="Script" uid="uid://dvav0l8m22oyv" path="res://player/player.gd" id="1_rgyib"]
 [ext_resource type="Texture2D" uid="uid://tunf1xiuva2y" path="res://assets/char_a_p1_0bas_demn_v01.png" id="2_hg6s5"]
@@ -1930,6 +1930,9 @@ _data = {
 radius = 0.100047
 height = 0.228902
 
+[sub_resource type="SphereShape3D" id="SphereShape3D_yllr7"]
+radius = 0.09
+
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0)
 script = ExtResource("1_rgyib")
@@ -2084,5 +2087,12 @@ unique_name_in_owner = true
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.112088, 0)
 shape = SubResource("CapsuleShape3D_ebec5")
+
+[node name="PushingArea" type="Area3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.113406, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PushingArea"]
+shape = SubResource("SphereShape3D_yllr7")
 
 [connection signal="pressed" from="PauseMenu/HBoxContainer/VBoxContainer/Button" to="InputComponent" method="leave_game"]

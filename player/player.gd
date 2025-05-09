@@ -23,8 +23,8 @@ func _enter_tree():
 func _ready_server():
 	add_to_group("players")
 
-	$InteractionArea.body_entered.connect(_on_interaction_area_body_entered)
-	$InteractionArea.body_exited.connect(_on_interaction_area_body_exited)
+	# $InteractionArea.body_entered.connect(_on_interaction_area_body_entered)
+	# $InteractionArea.body_exited.connect(_on_interaction_area_body_exited)
 
 func _handle_sliding_collisions():
 	for i in get_slide_collision_count():
@@ -56,6 +56,18 @@ func _on_interaction_area_body_exited(body):
 
 	if body is RigidBody3D:
 		print("Player no longer near RigidBody: ", body.name)
+
+func push_character_body(body: CharacterBody3D, push_force: float = 5.0):
+	if not multiplayer.is_server():
+		return
+	
+	var direction = global_position - body.global_position
+	direction.y = 0
+	direction = direction.normalized() * -1
+
+	var push_velocity = direction * push_force
+	
+	body.velocity += push_velocity
 
 func push_rigid_body_away(body: RigidBody3D, push_force: float = 10.0):
 	if not multiplayer.is_server():
