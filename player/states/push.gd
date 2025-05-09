@@ -21,6 +21,7 @@ func enter_server(_state_packet):
 	
 	pushing = true
 
+	print(%InputComponent.look_direction)
 	check_for_bodies_in_area()
 
 func exit_server():

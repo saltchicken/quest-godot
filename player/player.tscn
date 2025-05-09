@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://g54h3qgdivex" path="res://utility/state_machines/player_machine/state_machine.gd" id="5_ebec5"]
 [ext_resource type="Script" uid="uid://cvviopkgfalex" path="res://player/states/idle.gd" id="6_yllr7"]
 [ext_resource type="Script" uid="uid://dgal0pcamogrt" path="res://player/states/run.gd" id="7_kb6p2"]
-[ext_resource type="Script" uid="uid://cuu6ge5bpokg" path="res://player/push.gd" id="7_yllr7"]
+[ext_resource type="Script" uid="uid://cuu6ge5bpokg" path="res://player/states/push.gd" id="7_yllr7"]
 [ext_resource type="Script" uid="uid://e4ab8h0jrls1" path="res://player/states/walk.gd" id="8_wodsf"]
 [ext_resource type="Script" uid="uid://c7q7evi88srpu" path="res://player/states/jump.gd" id="9_ebec5"]
 [ext_resource type="Script" uid="uid://dli6s6iqw3d7v" path="res://player/animation_tree.gd" id="9_hg6s5"]
@@ -2090,7 +2090,7 @@ shape = SubResource("CapsuleShape3D_ebec5")
 
 [node name="PushingArea" type="Area3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.113406, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.113406, -0.0644937)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PushingArea"]
 shape = SubResource("SphereShape3D_yllr7")
