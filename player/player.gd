@@ -108,8 +108,8 @@ func player_died():
 	# var tween = create_tween()
 	# tween.tween_property(animated_sprite, "modulate", Color(0, 0, 0, 1), 2.0)
 	#
-	self.set_process(false)
-	self.set_physics_process(false)
+	# self.set_process(false)
+	# self.set_physics_process(false)
 	if multiplayer.get_unique_id() == name.to_int():
 		%InputComponent.set_process(false)
 		%InputComponent.set_physics_process(false)
@@ -120,8 +120,8 @@ func player_respawned():
 	print("Do stuff for player respawn")
 	# animated_sprite.modulate = Color(1, 1, 1, 1)
 	# animated_sprite.play("idle_down")
-	self.set_process(true)
-	self.set_physics_process(true)
+	# self.set_process(true)
+	# self.set_physics_process(true)
 	if multiplayer.get_unique_id() == name.to_int():
 		%InputComponent.set_process(true)
 		%InputComponent.set_physics_process(true)
