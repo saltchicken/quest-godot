@@ -19,8 +19,11 @@ func enter_server(_state_packet):
 	pass
 
 func enter_authority_client(_state_packet):
+	print("Enterred")
+	print(%StateMachine.current_state.name)
 	animation.play(name)
 	animation.set_direction(name, Vector2(%InputComponent.look_direction.x, %InputComponent.look_direction.z))
+	# %StateMachine.current_state.animation.set_speed_scale(%StateMachine.current_state.name, 10.0)
 
 func enter_peer_client(_state_packet):
 	animation.play(name)
@@ -59,6 +62,8 @@ func _find_authority_player():
 func get_rotated_vector():
 	if _authority_player == null:
 		_authority_player = _find_authority_player()
+		if _authority_player == null:
+			return Vector2.ZERO
 		_auth_camera = _authority_player.get_node_or_null("CameraPivot/Camera3D")
 
 	# TODO: Should not need the if statements. Need to calculate the rotated vector properly for the direction
