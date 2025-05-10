@@ -1,8 +1,17 @@
-[gd_scene load_steps=6 format=3 uid="uid://c1461704v2obb"]
+[gd_scene load_steps=10 format=3 uid="uid://c1461704v2obb"]
 
 [ext_resource type="Script" uid="uid://ba4uhc8ac4kf" path="res://fireball.gd" id="1_sf4mh"]
+[ext_resource type="Shader" uid="uid://idey6ifxn7gf" path="res://fireball.gdshader" id="2_olwj8"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_wi6of"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wdani"]
+render_priority = 0
+shader = ExtResource("2_olwj8")
+shader_parameter/fire_color1 = Color(1, 0.8, 0, 1)
+shader_parameter/fire_color2 = Color(1, 0.3, 0, 1)
+shader_parameter/fire_speed = 1.0
+shader_parameter/fire_intensity = 5.0
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sf4mh"]
 
@@ -17,12 +26,20 @@ properties/1/replication_mode = 1
 [sub_resource type="SphereShape3D" id="SphereShape3D_olwj8"]
 radius = 0.0724109
 
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_olwj8"]
+gravity = Vector3(0, 20, 0)
+
+[sub_resource type="SphereMesh" id="SphereMesh_wdani"]
+radius = 0.025
+height = 0.1
+
 [node name="fireball" type="RigidBody3D"]
 script = ExtResource("1_sf4mh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 mesh = SubResource("SphereMesh_wi6of")
+surface_material_override/0 = SubResource("ShaderMaterial_wdani")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -36,3 +53,12 @@ unique_name_in_owner = true
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
 shape = SubResource("SphereShape3D_olwj8")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+unique_name_in_owner = true
+amount = 10
+lifetime = 0.2
+speed_scale = 0.5
+randomness = 0.5
+process_material = SubResource("ParticleProcessMaterial_olwj8")
+draw_pass_1 = SubResource("SphereMesh_wdani")
