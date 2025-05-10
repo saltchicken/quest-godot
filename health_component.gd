@@ -78,24 +78,30 @@ var hit_indicator_node = preload("res://hit_indicator.tscn")
 
 @rpc("authority")
 func show_hit_indicator(damage_text: String):
-	# print("Showing hit indicator")
-	# print(owner)
-	var authority_player = _find_authority_player()
-	if authority_player and authority_player != owner:
-		var hit_indicator_instance = hit_indicator_node.instantiate()
-		owner.add_child(hit_indicator_instance)
-		hit_indicator_instance.set_text(damage_text)
-		var auth_camera = authority_player.get_node_or_null("CameraPivot/Camera3D")
-		if auth_camera:
-			# Make the hit indicator face the authority camera
-			var direction = auth_camera.global_transform.origin - hit_indicator_instance.global_transform.origin
-			
-			# Make the hit indicator face away from the camera (opposite direction)
-			hit_indicator_instance.look_at(hit_indicator_instance.global_transform.origin - direction, Vector3.UP)
-	# hit_indicator_instance.x_offset = x_offset
-	# hit_indicator_instance.main()
-	
+	if multiplayer.is_server():
+		print("Don't run on server")
+		return
+
+	var hit_indicator_instance = hit_indicator_node.instantiate()
+	owner.add_child(hit_indicator_instance)
+	hit_indicator_instance.set_text(damage_text)
+
+	if owner.role == owner.Role.AUTHORITY_CLIENT:
 		hit_indicator_instance.main()
+		return
+	if owner.role == owner.Role.PEER_CLIENT:
+		var authority_player = _find_authority_player()
+		if authority_player and authority_player != owner:
+			var auth_camera = authority_player.get_node_or_null("CameraPivot/Camera3D")
+			if auth_camera:
+				# Make the hit indicator face the authority camera
+				var direction = auth_camera.global_transform.origin - hit_indicator_instance.global_transform.origin
+				
+				# Make the hit indicator face away from the camera (opposite direction)
+				hit_indicator_instance.look_at(hit_indicator_instance.global_transform.origin - direction, Vector3.UP)
+		hit_indicator_instance.main()
+		return
+	
 
 func _find_authority_player():
 	var players = get_tree().get_nodes_in_group("players")
