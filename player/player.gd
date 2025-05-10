@@ -34,10 +34,6 @@ func _handle_sliding_collisions():
 			if collision.get_collider().name == "Lava":
 				print("Lava entered")
 				health_component.kill()
-				await get_tree().create_timer(3.0).timeout
-				global_position = Vector3(0, 3, 0)	# Respawn position
-				health_component.full_health()
-				player_respawned.rpc()
 				return
 				# Handle the collision with the static body
 
@@ -121,9 +117,6 @@ func player_died():
 	#
 	# self.set_process(false)
 	# self.set_physics_process(false)
-	if multiplayer.get_unique_id() == name.to_int():
-		%InputComponent.set_process(false)
-		%InputComponent.set_physics_process(false)
 
 @rpc("authority")
 func player_respawned():
@@ -132,9 +125,6 @@ func player_respawned():
 	# animated_sprite.play("idle_down")
 	# self.set_process(true)
 	# self.set_physics_process(true)
-	if multiplayer.get_unique_id() == name.to_int():
-		%InputComponent.set_process(true)
-		%InputComponent.set_physics_process(true)
 
 func _on_ping_updated(ping_value):
 	if multiplayer.get_unique_id() == name.to_int():

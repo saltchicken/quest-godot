@@ -13,7 +13,12 @@ func _set_health(new_value):
 		new_value = MAX_HEALTH
 	health = new_value
 	if health <= 0.0:
+		health = 0.0
 		owner.player_died.rpc()
+		await get_tree().create_timer(3.0).timeout
+		owner.global_position = Vector3(0, 3, 0)	# Respawn position
+		full_health()
+		owner.player_respawned.rpc()
 	# health_update.emit()
 	
 
@@ -38,6 +43,10 @@ func full_health():
 
 func kill():
 	health = 0.0
+
+func damage(damage_amount):
+	show_hit_indicator.rpc(str(damage_amount))
+	health -= damage_amount
 
 # func damage(attack: Attack):
 # 	var damage = attack.attack_damage
@@ -65,9 +74,37 @@ func kill():
 # 		push_warning("StateMachine not set")
 
 
-# var hit_indicator_node = preload("res://text/hit_indicator/hit_indicator.tscn")
-#
-# func hit_indicator(parent_node, text_info: String, x_offset: float = 0.0, y_offset: float = 10.0):
+var hit_indicator_node = preload("res://hit_indicator.tscn")
+
+@rpc("authority")
+func show_hit_indicator(damage_text: String):
+	# print("Showing hit indicator")
+	# print(owner)
+	var authority_player = _find_authority_player()
+	if authority_player and authority_player != owner:
+		var hit_indicator_instance = hit_indicator_node.instantiate()
+		owner.add_child(hit_indicator_instance)
+		hit_indicator_instance.set_text(damage_text)
+		var auth_camera = authority_player.get_node_or_null("CameraPivot/Camera3D")
+		if auth_camera:
+			# Make the hit indicator face the authority camera
+			var direction = auth_camera.global_transform.origin - hit_indicator_instance.global_transform.origin
+			
+			# Make the hit indicator face away from the camera (opposite direction)
+			hit_indicator_instance.look_at(hit_indicator_instance.global_transform.origin - direction, Vector3.UP)
+	# hit_indicator_instance.x_offset = x_offset
+	# hit_indicator_instance.main()
+	
+		hit_indicator_instance.main()
+
+func _find_authority_player():
+	var players = get_tree().get_nodes_in_group("players")
+	for player in players:
+		if player.role == player.Role.AUTHORITY_CLIENT:
+			return player
+	return null
+
+# func hit_indicator(parent_node, text_info: String, x_offset: float = 0.0, y_offset: float = 1.0):
 # 	var hit_indicator_instance = hit_indicator_node.instantiate()
 # 	parent_node.add_child(hit_indicator_instance)
 # 	hit_indicator_instance.set_text(text_info)

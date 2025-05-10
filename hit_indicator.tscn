@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkk71koq8aca0"]
+
+[ext_resource type="Script" uid="uid://cp0507gr76aa8" path="res://hit_indicator.gd" id="1_t3y6f"]
+
+[node name="HitIndicator" type="Node3D"]
+script = ExtResource("1_t3y6f")
+
+[node name="Label3D" type="Label3D" parent="."]
+billboard = 2
+text = "TEST"
+font_size = 16
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.33
