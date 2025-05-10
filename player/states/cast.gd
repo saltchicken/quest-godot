@@ -1,5 +1,7 @@
 extends State
 
+const Direction = preload("res://utility/helpers/direction.gd")
+
 var casting = false
 var casting_duration = 0.4
 var casting_timer = 0.0
@@ -9,19 +11,10 @@ func enter_server(_state_packet):
 	
 	casting_timer = casting_duration
 	casting = true
+	var direction = Direction.look_direction_to_world_direction(%InputComponent.look_direction, owner)
 
-	var player_rotation = owner.global_rotation.y
-	var forward = Vector2(0, 1).rotated(-player_rotation)
-	var right = Vector2(1, 0).rotated(-player_rotation)
-	var direction = right * %InputComponent.look_direction.x + forward * %InputComponent.look_direction.z
-	direction = Vector3(direction.x, 0, direction.y).normalized()
-
-	print(direction)
-	
-	# Combine them based on input
 	GameManager.cast_projectile(owner.global_position + Vector3.UP * 0.5 + direction, direction, owner.PROJECTILE_SPEED)
-	# check_for_bodies_in_area()
-	#
+
 func update_server(delta:float):
 	input_dir = %InputComponent.input_direction
 	input_run = %InputComponent.input_run

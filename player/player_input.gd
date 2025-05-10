@@ -1,6 +1,8 @@
 extends MultiplayerSynchronizer
 class_name InputComponent
 
+const Direction = preload("res://utility/helpers/direction.gd")
+
 @onready var player = $".."
 @onready var pause_menu = %PauseMenu
 @onready var camera_pivot = $"../CameraPivot"
@@ -56,22 +58,14 @@ func _handle_input_direction():
 	
 	if raw_input_length > 0.1:
 		look_direction = Vector3(raw_input.x, 0, raw_input.y)
+		direction = Direction.look_direction_to_world_direction(look_direction, owner)
 
-		var input_rot = player.global_rotation.y
-		var forward = Vector2(0, 1).rotated(-input_rot)
-		var right = Vector2(1, 0).rotated(-input_rot)
-		
-		# Combine them based on input
-		direction = right * raw_input.x + forward * raw_input.y
-		direction = Vector3(direction.x, 0, direction.y)
-
-		if raw_input_length > 1.0:
-			print("Raw input normalized")
-			direction = direction.normalized()
 	else:
 		direction = Vector3.ZERO
 	
 	return direction
+
+
 
 func _unhandled_input(event):
 	if get_multiplayer_authority() != multiplayer.get_unique_id():
