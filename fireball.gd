@@ -5,6 +5,7 @@ var speed = 10.0
 
 func _ready() -> void:
 	if multiplayer.is_server():
+		gravity_scale = 0.0
 		apply_impulse(direction * speed)
 		var timer = get_tree().create_timer(5.0)
 		timer.timeout.connect(queue_free)
