@@ -8,10 +8,9 @@ var role = Role.PEER_CLIENT
 @onready var player_name_label = %PlayerNameLabel
 
 @onready var state_machine = $StateMachine
+@onready var health_component = %HealthComponent
 
 var _is_on_floor = false
-var _alive = true
-
 
 const SPEED = 2.5
 const RUN_SPEED = 4.2
@@ -34,11 +33,10 @@ func _handle_sliding_collisions():
 		if collision.get_collider() is StaticBody3D:
 			if collision.get_collider().name == "Lava":
 				print("Lava entered")
-				_alive = false
-				player_died.rpc()
+				health_component.kill()
 				await get_tree().create_timer(3.0).timeout
 				global_position = Vector3(0, 3, 0)	# Respawn position
-				_alive = true
+				health_component.full_health()
 				player_respawned.rpc()
 				return
 				# Handle the collision with the static body
@@ -95,7 +93,7 @@ func _ready_peer_clients():
 
 func _physics_process_server(delta):
 	_is_on_floor = is_on_floor()
-	if _alive:
+	if health_component.health > 0.0:
 		state_machine._physics_process_state_machine(delta)
 		# Apply gravity
 		if not is_on_floor():
@@ -115,7 +113,6 @@ func _physics_process_peer_client(_delta):
 
 @rpc("authority")
 func player_died():
-	_alive = false
 	print("Do stuff for player death")
 	# animated_sprite.play("death")
 	#
@@ -130,7 +127,6 @@ func player_died():
 
 @rpc("authority")
 func player_respawned():
-	_alive = true
 	print("Do stuff for player respawn")
 	# animated_sprite.modulate = Color(1, 1, 1, 1)
 	# animated_sprite.play("idle_down")

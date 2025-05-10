@@ -1,4 +1,4 @@
-[gd_scene load_steps=202 format=3 uid="uid://bk6x4rvwunklf"]
+[gd_scene load_steps=203 format=3 uid="uid://bk6x4rvwunklf"]
 
 [ext_resource type="Script" uid="uid://dvav0l8m22oyv" path="res://player/player.gd" id="1_rgyib"]
 [ext_resource type="Texture2D" uid="uid://tunf1xiuva2y" path="res://assets/char_a_p1_0bas_demn_v01.png" id="2_hg6s5"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://cernua8g4qwax" path="res://assets/RunSheet.png" id="10_2ieo8"]
 [ext_resource type="Texture2D" uid="uid://be8jv3265xm30" path="res://assets/IdleSheet.png" id="11_ebec5"]
 [ext_resource type="Script" uid="uid://chvkgpa1auxtr" path="res://player/states/cast.gd" id="11_kb6p2"]
+[ext_resource type="PackedScene" uid="uid://c0hwpjgjdxyga" path="res://health_component.tscn" id="15_wodsf"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_i3pqv"]
 radius = 0.0740634
@@ -2174,5 +2175,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.113406, -0.0644937)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PushingArea"]
 shape = SubResource("SphereShape3D_yllr7")
+
+[node name="HealthComponent" parent="." instance=ExtResource("15_wodsf")]
+unique_name_in_owner = true
 
 [connection signal="pressed" from="PauseMenu/HBoxContainer/VBoxContainer/Button" to="InputComponent" method="leave_game"]
