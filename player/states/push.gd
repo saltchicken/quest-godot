@@ -7,7 +7,6 @@ var pushing_timer = 0.0
 var pushing_area
 
 func enter_server(_state_packet):
-	print("Enter Server Push")
 
 	pushing_timer = pushing_duration
 
@@ -25,7 +24,6 @@ func enter_server(_state_packet):
 	check_for_bodies_in_area()
 
 func exit_server():
-	print("Exit Server Jump")
 	return state_packet
 
 func update_server(delta:float):

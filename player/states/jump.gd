@@ -6,14 +6,12 @@ extends State
 
 func enter_server(_state_packet):
 	owner.velocity.y += 2.0
-	print("Enter Server Jump")
 
 	# jumping = true
 	# jumping_timer = jumping_duration
 
 
 func exit_server():
-	print("Exit Server Jump")
 	return state_packet
 
 func update_server(_delta:float):

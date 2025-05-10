@@ -1,10 +1,6 @@
 extends State
 
-func enter_server(_state_packet):
-	print("Enter Server Walk")
-
 func exit_server():
-	print("Exit Server Walk")
 	return state_packet
 
 func update_server(delta:float):
