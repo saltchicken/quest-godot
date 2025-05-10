@@ -1,10 +1,10 @@
 extends State
 
-func update_server(_delta:float):
-	var input_dir = %InputComponent.input_direction
-	var input_run = %InputComponent.input_run
-	var input_jump = %InputComponent.input_jump
-	var input_push = %InputComponent.input_push
+func update_server(delta:float):
+	input_dir = %InputComponent.input_direction
+	input_run = %InputComponent.input_run
+	input_jump = %InputComponent.input_jump
+	input_push = %InputComponent.input_push
 
 	if input_jump:
 		state_machine.change_state.emit("jump")
@@ -18,13 +18,5 @@ func update_server(_delta:float):
 			state_machine.change_state.emit("walk")
 	
 
+	state_movement(delta)
 
-	#
-	# state_movement()
-	#
-# func state_movement():
-# 	print("Idle: State Movement")
-	# owner.velocity.x = input.direction.x * owner.run_speed
-	# owner.velocity.y = input.direction.y * owner.run_speed
-	#
-	#	# Get synchronized input from client

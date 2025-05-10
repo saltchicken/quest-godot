@@ -6,6 +6,7 @@ var pushing_timer = 0.0
 
 var pushing_area
 
+
 func enter_server(_state_packet):
 
 	pushing_timer = pushing_duration
@@ -27,8 +28,8 @@ func exit_server():
 	return state_packet
 
 func update_server(delta:float):
-	var input_dir = %InputComponent.input_direction
-	var input_run = %InputComponent.input_run
+	input_dir = %InputComponent.input_direction
+	input_run = %InputComponent.input_run
 
 	if pushing_timer > 0:
 		pushing_timer -= delta
@@ -47,32 +48,7 @@ func update_server(delta:float):
 			else:
 				state_machine.change_state.emit("idle")
 	
-	var current_speed = owner.SPEED
-	if input_run:
-		current_speed = owner.RUN_SPEED
-	
-	if input_dir:
-		owner.velocity.x += input_dir.x * current_speed * delta * 10.0
-		owner.velocity.z += input_dir.z * current_speed * delta * 10.0
-	
-	# Cap horizontal speed
-	var max_speed = current_speed * 1.2
-	var horizontal_velocity = Vector2(owner.velocity.x, owner.velocity.z)
-	if horizontal_velocity.length() > max_speed:
-		horizontal_velocity = horizontal_velocity.normalized() * max_speed
-		owner.velocity.x = horizontal_velocity.x
-		owner.velocity.z = horizontal_velocity.y
-
-# func _on_interaction_area_body_entered(body):
-# 	if body is RigidBody3D:
-# 		if pushing == true:
-# 			print("Pushing body")
-# 			owner.push_rigid_body_away(body, 2)
-# 			pushing = false
-#
-# func _on_interaction_area_body_exited(body):
-# 	if body is RigidBody3D:
-# 		print("Player no longer near RigidBody: ", body.name)
+	state_movement(delta)
 
 
 func check_for_bodies_in_area():

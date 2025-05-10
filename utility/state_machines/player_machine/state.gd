@@ -17,6 +17,11 @@ var _auth_camera = null
 
 var state_packet
 
+var input_dir
+var input_run
+var input_jump
+var input_push
+
 func enter_server(_state_packet):
 	pass
 
@@ -49,6 +54,23 @@ func update_authority_client(_delta:float):
 func update_peer_client(_delta:float):
 	%PeerState.text = "State: " + str(%StateMachine.current_state)
 	%StateMachine.current_state.animation.set_direction(%StateMachine.current_state.name, get_rotated_vector())
+
+func state_movement(delta:float):
+	var current_speed = owner.SPEED
+	if input_run:
+		current_speed = owner.RUN_SPEED
+	
+	if input_dir:
+		owner.velocity.x += input_dir.x * current_speed * delta * 10.0
+		owner.velocity.z += input_dir.z * current_speed * delta * 10.0
+	
+	# Cap horizontal speed
+	var max_speed = current_speed * 1.2
+	var horizontal_velocity = Vector2(owner.velocity.x, owner.velocity.z)
+	if horizontal_velocity.length() > max_speed:
+		horizontal_velocity = horizontal_velocity.normalized() * max_speed
+		owner.velocity.x = horizontal_velocity.x
+		owner.velocity.z = horizontal_velocity.y
 
 func _find_authority_player():
 	var players = get_tree().get_nodes_in_group("players")
@@ -91,5 +113,3 @@ func get_rotated_vector():
 		rotated_vector = Vector2(0.7, 0.7)	# NE
 
 	return rotated_vector
-func state_movement():
-	pass
