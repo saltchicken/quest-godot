@@ -9,9 +9,19 @@ func enter_server(_state_packet):
 	
 	casting_timer = casting_duration
 	casting = true
-	GameManager.cast_projectile(owner.global_position + Vector3.UP * 0.5 - owner.global_transform.basis.z.normalized(), -owner.global_transform.basis.z.normalized(), owner.PROJECTILE_SPEED)
-	# check_for_bodies_in_area()
 
+	var player_rotation = owner.global_rotation.y
+	var forward = Vector2(0, 1).rotated(-player_rotation)
+	var right = Vector2(1, 0).rotated(-player_rotation)
+	var direction = right * %InputComponent.look_direction.x + forward * %InputComponent.look_direction.z
+	direction = Vector3(direction.x, 0, direction.y).normalized()
+
+	print(direction)
+	
+	# Combine them based on input
+	GameManager.cast_projectile(owner.global_position + Vector3.UP * 1.5 - owner.global_transform.basis.z.normalized(), direction, owner.PROJECTILE_SPEED)
+	# check_for_bodies_in_area()
+	#
 func update_server(delta:float):
 	input_dir = %InputComponent.input_direction
 	input_run = %InputComponent.input_run
