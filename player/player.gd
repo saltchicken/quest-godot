@@ -17,7 +17,7 @@ const SPEED = 2.5
 const RUN_SPEED = 4.2
 const FRICTION = 0.2
 
-const PROJECTILE_SPEED = 10.0
+const PROJECTILE_SPEED = 25.0
 
 func _enter_tree():
 	%InputComponent.set_multiplayer_authority(name.to_int())

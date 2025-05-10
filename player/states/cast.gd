@@ -19,7 +19,7 @@ func enter_server(_state_packet):
 	print(direction)
 	
 	# Combine them based on input
-	GameManager.cast_projectile(owner.global_position + Vector3.UP * 1.5 - owner.global_transform.basis.z.normalized(), direction, owner.PROJECTILE_SPEED)
+	GameManager.cast_projectile(owner.global_position + Vector3.UP * 0.5 + direction, direction, owner.PROJECTILE_SPEED)
 	# check_for_bodies_in_area()
 	#
 func update_server(delta:float):
