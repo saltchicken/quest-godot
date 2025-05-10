@@ -13,7 +13,7 @@ func enter_server(_state_packet):
 	casting = true
 	var direction = Direction.look_direction_to_world_direction(%InputComponent.look_direction, owner)
 
-	GameManager.cast_projectile(owner.global_position + Vector3.UP * 0.5 + direction / 4, direction, owner.PROJECTILE_SPEED, owner)
+	GameManager.cast_projectile(owner.global_position + Vector3.UP * 0.5 + direction / 2, direction, owner.PROJECTILE_SPEED, owner)
 
 func update_server(delta:float):
 	input_dir = %InputComponent.input_direction
