@@ -105,6 +105,10 @@ transform = Transform3D(0.973099, -0.230372, 0.00258604, 0.213166, 0.904567, 0.3
 _spawnable_scenes = PackedStringArray("uid://bk6x4rvwunklf")
 spawn_path = NodePath("../Players")
 
+[node name="MultiplayerSpawner2" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("uid://c1461704v2obb")
+spawn_path = NodePath("../Spells")
+
 [node name="Players" type="Node" parent="."]
 unique_name_in_owner = true
 
@@ -122,3 +126,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.58563, 3.00546, 0)
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
 replication_config = SubResource("SceneReplicationConfig_18vqw")
+
+[node name="Spells" type="Node" parent="."]
+unique_name_in_owner = true

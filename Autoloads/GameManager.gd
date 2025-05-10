@@ -6,6 +6,7 @@ const SERVER_IP = "main"
 
 var player_scene = preload("res://player/player.tscn")
 var _players_spawn_node
+var _spells_spawn_node
 
 signal game_state_changed(key, value)
 
@@ -101,6 +102,24 @@ func _peer_connected(id: int):
 	player_to_add.position = Vector3(0, 3, 0)
 	_players_spawn_node.add_child(player_to_add, true)
 	print("Player %s joined" % id)
+
+
+func cast_projectile(pos, dir, speed):
+	_spells_spawn_node = get_tree().root.get_node("Game").get_node("Spells")
+	var projectile_scene = preload("res://fireball.tscn")
+	var projectile = projectile_scene.instantiate()
+	# Set projectile position and direction
+	# var spawn_pos = pos + Vector3.UP * 0.5
+	# var direction = -pos.basis.z.normalized()
+	
+	projectile.position = pos
+	projectile.direction = dir
+	projectile.speed = speed
+	# projectile.caster = self
+	_spells_spawn_node.add_child(projectile, true)
+	
+	# Add to scene
+	# get_tree().root.get_node("Game").add_child(projectile)
 
 func _peer_disconnected(id: int):
 	print("Player %s left the game" % id)

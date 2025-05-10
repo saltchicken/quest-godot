@@ -21,6 +21,7 @@ var input_dir
 var input_run
 var input_jump
 var input_push
+var input_cast
 
 func enter_server(_state_packet):
 	pass

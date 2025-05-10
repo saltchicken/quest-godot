@@ -19,11 +19,13 @@ var input_direction := Vector3.ZERO
 var input_jump := false
 var input_push := false
 var input_run := false
+var input_cast := false
 
 const INPUT_ACTIONS = {
 	"run": "input_run",
 	"jump": "input_jump",
 	"push": "input_push",
+	"cast": "input_cast",
 }
 
 var is_paused = false

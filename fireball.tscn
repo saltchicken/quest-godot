@@ -1,10 +1,21 @@
-[gd_scene load_steps=3 format=3 uid="uid://c1461704v2obb"]
+[gd_scene load_steps=5 format=3 uid="uid://c1461704v2obb"]
+
+[ext_resource type="Script" uid="uid://ba4uhc8ac4kf" path="res://fireball.gd" id="1_sf4mh"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_wi6of"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_sf4mh"]
 
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_sf4mh"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
 [node name="fireball" type="RigidBody3D"]
+script = ExtResource("1_sf4mh")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
@@ -13,3 +24,6 @@ mesh = SubResource("SphereMesh_wi6of")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
 shape = SubResource("SphereShape3D_sf4mh")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_sf4mh")
