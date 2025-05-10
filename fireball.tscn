@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://c1461704v2obb"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_wi6of"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_sf4mh"]
+
+[node name="fireball" type="RigidBody3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+mesh = SubResource("SphereMesh_wi6of")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 0, 0)
+shape = SubResource("SphereShape3D_sf4mh")
