@@ -21,7 +21,8 @@ func enter_server(_state_packet):
 	
 	pushing = true
 
-	print(%InputComponent.look_direction)
+	pushing_area.position = %InputComponent.look_direction / 5
+
 	check_for_bodies_in_area()
 
 func exit_server():
@@ -52,6 +53,8 @@ func update_server(delta:float):
 
 
 func check_for_bodies_in_area():
+	await get_tree().process_frame
+
 	if pushing_area and pushing:
 		var bodies = pushing_area.get_overlapping_bodies()
 		for body in bodies:
@@ -60,7 +63,7 @@ func check_for_bodies_in_area():
 					print("Found RigidBody in push area: ", body.name)
 					owner.push_rigid_body_away(body, 2)
 				pushing = false
-			elif body is CharacterBody3D:
+			elif body is CharacterBody3D and body != owner:
 				print("Found CharacterBody in push area: ", body.name)
 				owner.push_character_body(body, 3)
 				pushing = false
