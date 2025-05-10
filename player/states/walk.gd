@@ -1,8 +1,5 @@
 extends State
 
-func exit_server():
-	return state_packet
-
 func update_server(delta:float):
 	var input_dir = %InputComponent.input_direction
 	var input_run = %InputComponent.input_run
