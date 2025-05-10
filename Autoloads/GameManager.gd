@@ -104,7 +104,7 @@ func _peer_connected(id: int):
 	print("Player %s joined" % id)
 
 
-func cast_projectile(pos, dir, speed):
+func cast_projectile(pos, dir, speed, caster):
 	_spells_spawn_node = get_tree().root.get_node("Game").get_node("Spells")
 	var projectile_scene = preload("res://fireball.tscn")
 	var projectile = projectile_scene.instantiate()
@@ -115,7 +115,7 @@ func cast_projectile(pos, dir, speed):
 	projectile.position = pos
 	projectile.direction = dir
 	projectile.speed = speed
-	# projectile.caster = self
+	projectile.caster = caster
 	_spells_spawn_node.add_child(projectile, true)
 	
 	# Add to scene

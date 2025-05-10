@@ -4,6 +4,8 @@ var direction = Vector3.FORWARD
 var speed = 10.0
 var destruction_timer: SceneTreeTimer = null
 
+var caster = null
+
 func _ready() -> void:
     if multiplayer.is_server():
         gravity_scale = 0.0
@@ -20,7 +22,7 @@ func _on_interaction_area_body_entered(body: Node) -> void:
         return
         
     # Skip if the body is itself or its own InteractionArea
-    if body == self || body.get_parent() == self:
+    if body == self || body.get_parent() == self || body == caster:
         return
         
     if body is CharacterBody3D:
