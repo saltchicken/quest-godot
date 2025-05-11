@@ -65,7 +65,7 @@ func check_for_bodies_in_area():
 				pushing = false
 			elif body is CharacterBody3D and body != owner:
 				print("Found CharacterBody in push area: ", body.name)
-				owner.push_character_body(body, 3)
+				owner.push_character_body(body, 10)
 				pushing = false
 			elif body is StaticBody3D:
 				print("Found StaticBody in push area: ", body.name)

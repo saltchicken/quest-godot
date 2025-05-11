@@ -66,12 +66,12 @@ func state_movement(delta:float):
 		owner.velocity.z += input_dir.z * current_speed * delta * 10.0
 	
 	# Cap horizontal speed
-	var max_speed = current_speed * 1.2
-	var horizontal_velocity = Vector2(owner.velocity.x, owner.velocity.z)
-	if horizontal_velocity.length() > max_speed:
-		horizontal_velocity = horizontal_velocity.normalized() * max_speed
-		owner.velocity.x = horizontal_velocity.x
-		owner.velocity.z = horizontal_velocity.y
+	# var max_speed = current_speed * 1.2
+	# var horizontal_velocity = Vector2(owner.velocity.x, owner.velocity.z)
+	# if horizontal_velocity.length() > max_speed:
+	# 	horizontal_velocity = horizontal_velocity.normalized() * max_speed
+	# 	owner.velocity.x = horizontal_velocity.x
+	# 	owner.velocity.z = horizontal_velocity.y
 
 func _find_authority_player():
 	var players = get_tree().get_nodes_in_group("players")
