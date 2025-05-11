@@ -35,7 +35,7 @@ func _on_interaction_area_body_entered(body: Node) -> void:
 		handle_hit()
 		var health_component = body.get_node_or_null("HealthComponent")
 		if health_component:
-			health_component.damage(10)
+			health_component.damage(45)
 	elif body is StaticBody3D:
 		print("Hit a static object!")
 		handle_hit()

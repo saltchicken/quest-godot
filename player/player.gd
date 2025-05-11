@@ -89,17 +89,17 @@ func _ready_peer_clients():
 
 func _physics_process_server(delta):
 	_is_on_floor = is_on_floor()
-	if health_component.health > 0.0:
-		state_machine._physics_process_state_machine(delta)
-		# Apply gravity
-		if not is_on_floor():
-			velocity += get_gravity() * delta
-		else:
-			velocity.x *= (1.0 - FRICTION)
-			velocity.z *= (1.0 - FRICTION)
-		
-		if move_and_slide():
-			_handle_sliding_collisions()
+	# if health_component.health > 0.0:
+	state_machine._physics_process_state_machine(delta)
+	# Apply gravity
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+	else:
+		velocity.x *= (1.0 - FRICTION)
+		velocity.z *= (1.0 - FRICTION)
+	
+	if move_and_slide():
+		_handle_sliding_collisions()
 
 func _physics_process_authority_client(_delta):
 	state_machine._physics_process_state_machine_authority_client(_delta)

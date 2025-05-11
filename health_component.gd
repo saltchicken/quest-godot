@@ -14,11 +14,8 @@ func _set_health(new_value):
 	health = new_value
 	if health <= 0.0:
 		health = 0.0
-		owner.player_died.rpc()
-		await get_tree().create_timer(3.0).timeout
-		owner.global_position = Vector3(0, 3, 0)	# Respawn position
-		full_health()
-		owner.player_respawned.rpc()
+		print("Emit death")
+		state_machine.change_state.emit("death")
 	# health_update.emit()
 	
 
