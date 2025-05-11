@@ -14,8 +14,12 @@ func _set_health(new_value):
 	health = new_value
 	if health <= 0.0:
 		health = 0.0
-		print("Emit death")
-		state_machine.change_state.emit("death")
+		if state_machine.current_state.name != "death":
+			print("Emit death")
+			state_machine.change_state.emit("death")
+		else:
+			print("Player already dead")
+
 	# health_update.emit()
 	
 
