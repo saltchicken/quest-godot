@@ -1,10 +1,10 @@
-[gd_scene load_steps=23 format=3 uid="uid://bs7mo7ss2w0ft"]
+[gd_scene load_steps=18 format=3 uid="uid://bs7mo7ss2w0ft"]
 
 [ext_resource type="Script" uid="uid://bpwa18bghyk3n" path="res://levels/game.gd" id="1_18vqw"]
 [ext_resource type="Texture2D" uid="uid://d25ror1qy41nu" path="res://assets/assets_task_01jt9b9tjhfcjvrkbemkz2fbdm_1746218082_img_0.webp" id="2_sdsdh"]
-[ext_resource type="Shader" uid="uid://muxq8rmqvund" path="res://levels/water.gdshader" id="3_sdsdh"]
 [ext_resource type="Shader" uid="uid://dwodtjlo8xjot" path="res://shaders/sky.gdshader" id="4_15fg1"]
 [ext_resource type="PackedScene" uid="uid://c6y8d0hc3q5x6" path="res://test_box.tscn" id="5_sdsdh"]
+[ext_resource type="Material" uid="uid://cdcrh2idnslh" path="res://levels/water_surface.tres" id="6_15fg1"]
 [ext_resource type="Shader" uid="uid://b2e3eb32v05jj" path="res://levels/ocean_floor.gdshader" id="6_f2gsp"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ilcil"]
@@ -41,52 +41,26 @@ properties/1/path = NodePath("TestBox:rotation")
 properties/1/spawn = true
 properties/1/replication_mode = 1
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_15fg1"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_hvr8k"]
+material = ExtResource("6_15fg1")
+top_radius = 1000.0
+bottom_radius = 1000.0
+height = 0.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bw4lc"]
 render_priority = 0
 shader = ExtResource("6_f2gsp")
 shader_parameter/ocean_floor_color = Color(0.01, 0.2, 1, 1)
 
-[sub_resource type="BoxMesh" id="BoxMesh_pknt5"]
-material = SubResource("ShaderMaterial_15fg1")
-size = Vector3(1000, 1, 1000)
+[sub_resource type="CylinderMesh" id="CylinderMesh_brlgf"]
+material = SubResource("ShaderMaterial_bw4lc")
+top_radius = 1000.0
+bottom_radius = 1000.0
+height = 0.2
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_8j2wk"]
-size = Vector3(1000, 3.70842, 1000)
-
-[sub_resource type="BoxMesh" id="BoxMesh_u44n3"]
-size = Vector3(1000, 0.5, 1000)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_f2gsp"]
-noise_type = 0
-fractal_type = 2
-fractal_weighted_strength = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_15fg1"]
-noise = SubResource("FastNoiseLite_f2gsp")
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_sdsdh"]
-fractal_type = 2
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_f2gsp"]
-seamless = true
-as_normal_map = true
-noise = SubResource("FastNoiseLite_sdsdh")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_t88pq"]
-render_priority = 0
-shader = ExtResource("3_sdsdh")
-shader_parameter/water_color = Color(0, 0, 0, 1)
-shader_parameter/uv_scale = 2.0
-shader_parameter/time_scale = 2.0
-shader_parameter/water_normal_noise = SubResource("NoiseTexture2D_f2gsp")
-shader_parameter/normal = 0.5
-shader_parameter/roughness = 0.25
-shader_parameter/sun_highlights = SubResource("NoiseTexture2D_15fg1")
-shader_parameter/color_ratio = 0.5
-shader_parameter/abberation_r = Vector2(0.005, 0)
-shader_parameter/abberation_g = Vector2(0, 0)
-shader_parameter/abberation_b = Vector2(-0.005, 0)
-shader_parameter/highlights_time_scale = 0.016
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ujbcn"]
+height = 0.2
+radius = 1000.0
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_18vqw")
@@ -137,19 +111,18 @@ replication_config = SubResource("SceneReplicationConfig_18vqw")
 [node name="Spells" type="Node" parent="."]
 unique_name_in_owner = true
 
+[node name="WaterSurface" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3.55888, 0)
+mesh = SubResource("CylinderMesh_hvr8k")
+skeleton = NodePath("")
+
 [node name="Lava" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -59.2506, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -9.31398, 0)
+metadata/_edit_group_ = true
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Lava"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 36.9174, 0)
-mesh = SubResource("BoxMesh_pknt5")
+mesh = SubResource("CylinderMesh_brlgf")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Lava"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 37.703, 0)
-shape = SubResource("BoxShape3D_8j2wk")
-
-[node name="WaterSurface" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -7.31203, 0)
-mesh = SubResource("BoxMesh_u44n3")
-skeleton = NodePath("")
-surface_material_override/0 = SubResource("ShaderMaterial_t88pq")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.00670147, 0)
+shape = SubResource("CylinderShape3D_ujbcn")
