@@ -15,7 +15,7 @@ const MAX_CAMERA_ROTATION = 0.9   # Looking down limit
 const DEFAULT_CAMERA_DISTANCE = 0.5  # Default distance from pivot
 const MIN_CAMERA_DISTANCE = 0.2		# Closest distance when looking down
 
-var look_direction := Vector3.FORWARD
+var look_direction := Vector3.BACK
 
 var input_direction := Vector3.ZERO
 var input_jump := false
