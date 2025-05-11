@@ -61,7 +61,7 @@ func check_for_bodies_in_area():
 			if body is RigidBody3D:
 				if body.name == "TestBox" or body.name == "TestBox2" or body.name == "TestBox3":
 					print("Found RigidBody in push area: ", body.name)
-					owner.push_rigid_body_away(body, 2)
+					owner.push_rigid_body_away(body, 5)
 				pushing = false
 			elif body is CharacterBody3D and body != owner:
 				print("Found CharacterBody in push area: ", body.name)
