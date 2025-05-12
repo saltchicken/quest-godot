@@ -1,7 +1,7 @@
 extends Node
 
 const SERVER_PORT = 30980
-# const SERVER_IP = "ec2-54-241-111-126.us-west-1.compute.amazonaws.com"
+# const SERVER_IP = "ec2-54-241-106-44.us-west-1.compute.amazonaws.com"
 const SERVER_IP = "main"
 
 var player_scene = preload("res://player/player.tscn")
